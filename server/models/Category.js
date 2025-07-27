@@ -17,6 +17,11 @@ const categorySchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    region: {
+        type: String,
+        enum: ["Western", "Indian"],
+        default: "Western"
+    },
     parentCategory: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",

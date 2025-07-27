@@ -27,13 +27,9 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0,
+    default: 0,
   },
-  orders: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
-    },
-  ],
+ 
 },  { timestamps: true }
 );
 
