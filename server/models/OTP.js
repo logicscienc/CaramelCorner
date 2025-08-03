@@ -13,7 +13,7 @@ const OTPSchema = new mongoose.Schema({
   purpose: {
     type: String,
     enum: ["registration", "login"],
-    require:true,
+    required:true,
 
   },
   createdAt: {

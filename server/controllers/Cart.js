@@ -1,15 +1,24 @@
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 
-// Helper functionto recalculate total price using for of loop
+// Helper function to recalculate total price using batch fetch
 const calculateTotalPrice = async (cart) => {
+  if (!cart.items.length) return 0;
+
+  const productIds = cart.items.map((item) => item.productId);
+  const products = await Product.find({ _id: { $in: productIds } });
+
+  const priceMap = new Map();
+  products.forEach((prod) => {
+    priceMap.set(prod._id.toString(), prod.price);
+  });
+
   let total = 0;
   for (const item of cart.items) {
-    const product = await Product.findById(item.productId);
-    if (product) {
-      total += product.price * item.quantity;
-    }
+    const price = priceMap.get(item.productId.toString()) || 0;
+    total += price * item.quantity;
   }
+
   return total;
 };
 
@@ -17,11 +26,12 @@ const calculateTotalPrice = async (cart) => {
 exports.addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
+    const qty = parseInt(quantity, 10);
     //as after login user is already authenticated
     const userId = req.user.id;
     // verification
 
-    if (!productId || !quantity) {
+    if (!productId || isNaN(qty) || qty <= 0) {
       return res.status(400).json({
         success: false,
         message: "Product ID and quantity are required",
@@ -37,13 +47,22 @@ exports.addToCart = async (req, res) => {
       });
     }
 
+    // check stock
+    if (product.stock < qty) {
+      return res.status(400).json({
+        success: false,
+        message: "Requested quantity exceeds stock",
+      });
+    }
+
+
     // Find cart or create new
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
       cart = new Cart({
         userId,
-        items: [{ productId, quantity }],
+        items: [{ productId, quantity: qty }],
       });
     } else {
       // Check if product already in cart
@@ -52,9 +71,9 @@ exports.addToCart = async (req, res) => {
       );
 
       if (existingItem) {
-        existingItem.quantity += quantity;
+        existingItem.quantity += qty;
       } else {
-        cart.items.push({ productId, quantity });
+        cart.items.push({ productId, quantity: qty });
       }
     }
     // Recalculate total
@@ -62,6 +81,7 @@ exports.addToCart = async (req, res) => {
 
     // save in db
     await cart.save();
+     await cart.populate("items.productId");
 
     return res.status(200).json({
       success: true,
@@ -110,8 +130,16 @@ exports.updateCartItem = async (req, res) => {
 
         const userId = req.user.id;
     const { productId, quantity } = req.body;
+const qty = parseInt(quantity, 10);
+if (!productId || isNaN(qty) || qty <= 0) {
+  return res.status(400).json({
+    success: false,
+    message: "Product ID and a valid quantity are required",
+  });
+}
 
-    let cart = await Cart.findOne({ userId });
+
+    const cart = await Cart.findOne({ userId });
     if (!cart) {
       return res.status(404).json({
         success: false,
@@ -131,12 +159,13 @@ exports.updateCartItem = async (req, res) => {
       });
     }
 
-    item.quantity = quantity;
+    item.quantity = qty;
 
     cart.totalPrice = await calculateTotalPrice(cart);
 
     // save in db
      await cart.save();
+      await cart.populate("items.productId");
 
        return res.status(200).json({
       success: true,
@@ -177,6 +206,7 @@ exports.removeCartItem = async (req, res) => {
     cart.totalPrice = await calculateTotalPrice(cart);
 
     await cart.save();
+    await cart.populate("items.productId");
 
     return res.status(200).json({
       success: true,

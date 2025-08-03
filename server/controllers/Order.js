@@ -1,5 +1,7 @@
 const Order = require("../models/Order");
+const { instance } = require("../config/razorpay");
 const Cart = require("../models/Cart");
+const mailSender = require("../utils/mailSender");
 
 // create order when a user try to place an order
 exports.createOrder = async (req, res) => {
@@ -100,5 +102,110 @@ exports.getOrderById = async (req, res) => {
   } catch (error) {
     console.error("Error fetching order:", error);
     return res.status(500).json({ success: false, message: "Could not fetch order" });
+  }
+};
+
+// for canceling the order
+exports.cancelOrder = async (req, res) => {
+  try{
+    // Order ID from URL
+    const { id } = req.params;
+    // Cancellation reason from user
+    const { reason } = req.body;
+    const userId = req.user.id;
+
+    // validate
+     if (!reason) {
+      return res.json({
+        success: false,
+        message:
+          "Please provide the reason for cancellation.",
+      });
+    }
+
+    // find the order
+    const order = await Order.findById(id)
+    .populate("products.productId")
+    .populate("userId", "email");
+    if (!order || order.userId._id.toString() !== userId) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    // only allow cancellation if the order hasn't progressed
+     if (order.orderStatus !== "Placed") {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot cancel order at this stage",
+      });
+    }
+
+    // save cancellation reason
+    order.cancellationReason = reason || "No reason provided";
+
+    // handle refunds if payment was online and already paid
+     if (order.paymentStatus === "Paid" && order.paymentMethod !== "COD") {
+      try {
+        const refund = await instance.payments.refund(order.transactionId, {
+          amount: order.totalAmount * 100, 
+        });
+
+        // Store refund details
+        order.refundId = refund.id;
+        order.refundStatus = "Initiated";
+        order.paymentStatus = "Refunded";
+         // Send refund email (inline)
+
+          await mailSender(
+          order.userId.email,
+          "Refund Initiated for Your Order",
+          `
+            <h2>Refund Initiated</h2>
+            <p>We have initiated a refund for your order <b>${order._id}</b>.</p>
+            <p>Refund Amount: ₹${order.totalAmount}</p>
+            <p>Refund ID: ${order.refundId}</p>
+            <p>The amount will be credited to your account in 5-7 working days.</p>
+          `
+        );
+      } catch (refundError) {
+        console.error("Refund failed:", refundError);
+        return res.status(500).json({
+          success: false,
+          message: "Order cancelled but refund could not be initiated. Contact support.",
+        });
+      }
+    }
+
+    // update order status
+     order.orderStatus = "Cancelled";
+    await order.save();
+     // Send cancellation email (inline)
+    await mailSender(
+      order.userId.email,
+      "Order Cancelled",
+      `
+        <h2>Order Cancelled</h2>
+        <p>Your order <b>${order._id}</b> has been cancelled.</p>
+        <p>Reason: ${reason}</p>
+        <p>If this was a mistake, please contact our support team.</p>
+      `
+    );
+
+     return res.status(200).json({
+      success: true,
+      message: "Order cancelled successfully",
+      order,
+    });
+
+
+
+
+  }
+  catch(error){
+     console.error("Error cancelling order:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Could not cancel order",
+    });
+
   }
 };

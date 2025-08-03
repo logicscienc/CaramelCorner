@@ -17,20 +17,26 @@ exports.auth = async (req, res, next) => {
         }
 
           // verify the token
-        try{
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            console.log("Decoded JWT:", decoded);
-            req.user = decoded;
-        }
-        catch(error) {
-            // verification issue
-            return res.status(401).json({
-                success:false,
-                message: 'token is invalid or expired',
-            });
+          let decoded
+         try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      return res.status(401).json({
+        success: false,
+        message: "Token is invalid or expired",
+      });
+    }
+     // Fetch user from DB
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-        }
-        next();
+    req.user = user;
+    next();   
 
     }
     catch(error)

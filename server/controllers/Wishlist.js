@@ -22,6 +22,14 @@ exports.addToWishlist = async (req, res) => {
         message: "Product not found",
       });
     }
+    // check manually if already in wishlist 
+     const existing = await Wishlist.findOne({ userId, productId });
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: "Product is already in wishlist",
+      });
+    }
 
     // Create wishlist entry (unique index prevents duplicates)
     const wishlistItem = await Wishlist.create({
@@ -38,12 +46,12 @@ exports.addToWishlist = async (req, res) => {
     console.error(error);
 
     // Handle duplicate entry (MongoDB error code 11000)
-    if (error.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: "Product is already in wishlist",
-      });
-    }
+    // if (error.code === 11000) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Product is already in wishlist",
+    //   });
+    // }
 
     return res.status(500).json({
       success: false,
@@ -58,7 +66,8 @@ exports.getWishlist = async (req, res) => {
     const userId = req.user.id;
 
     const wishlist = await Wishlist.find({ userId })
-      .populate("productId") // populate product details
+      .populate("productId")
+      .select("-_v") 
       .exec();
 
     return res.status(200).json({

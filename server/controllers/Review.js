@@ -1,6 +1,26 @@
 const Review = require("../models/Review");
 const Product = require("../models/Product");
 
+
+
+// Helper function to update product's averageRating
+async function updateProductRating(productId) {
+  const result = await Review.aggregate([
+    { $match: { productId: new require("mongoose").Types.ObjectId(productId) } },
+    {
+      $group: {
+        _id: "$productId",
+        avgRating: { $avg: "$rating" },
+      },
+    },
+  ]);
+
+  const avg = result.length > 0 ? result[0].avgRating : 0;
+
+  await Product.findByIdAndUpdate(productId, { averageRating: avg });
+}
+
+
 // addReview Creates a new review (1 review per user per product because of the unique index).
 exports.addReview = async (req, res) => {
   try {
@@ -36,6 +56,8 @@ exports.addReview = async (req, res) => {
       message: "Review added/updated successfully",
       review,
     });
+    await updateProductRating(productId);
+
 
   } catch (error) {
     console.error(error);
@@ -96,6 +118,8 @@ exports.updateReview = async (req, res) => {
     review.comment = comment ?? review.comment;
 
     await review.save();
+    await updateProductRating(productId);
+
 
     return res.status(200).json({
       success: true,
@@ -118,6 +142,8 @@ exports.deleteReview = async (req, res) => {
     const { productId } = req.params;
 
     const deleted = await Review.findOneAndDelete({ userId, productId });
+    await updateProductRating(productId);
+
 
     if (!deleted) {
       return res.status(404).json({

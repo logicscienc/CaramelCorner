@@ -51,6 +51,17 @@ const orderSchema = new mongoose.Schema(
       default: "Placed",
       required: true,
     },
+     // Added for refund tracking
+    refundId: {
+      type: String,
+      default: null,
+    },
+    refundStatus: {
+      type: String,
+      enum: ["NotRequired", "Initiated", "Completed"],
+      default: "NotRequired",
+    },
+
     //    no need of an array of address because one user have one address.
     address: {
       street: { type: String },

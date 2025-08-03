@@ -139,7 +139,7 @@ exports.signUp = async (req, res) => {
       phone,
       role,
       password,
-      image: `https://api/dicebear.com/5.x/initials/svg?seed=${name}`,
+      
     });
 
     // Delete all OTP records for this email after successful registration
