@@ -267,7 +267,7 @@ exports.loginWithOTP = async (req, res) => {
     }
 
     // Check OTP correctness
-     if (otp !== recentOtp.otp) {
+      if (otp.toString().trim() !== recentOtp.otp.toString().trim()) {
       return res.status(400).json({
         success: false,
         message: "Invalid OTP",
