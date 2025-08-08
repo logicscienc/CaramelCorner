@@ -54,7 +54,7 @@ router.put("/updateCategory", auth, updateCategory);
 // getAllCategories
 router.get("/getAllCategories", getAllCategories);
 // getOneCategory
-router.get("/getOneCategory", getOneCategory);
+router.get("/getOneCategory/:categoryId", getOneCategory);
 
 module.exports = router;
 

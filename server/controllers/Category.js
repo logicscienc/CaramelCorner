@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const Product = require("../models/Product");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 // create a new category
@@ -182,10 +183,13 @@ exports.getOneCategory = async (req, res) => {
         message: "Category not found",
       });
     }
+    // Find all products belonging to this category
+    const products = await Product.find({ categoryId: categoryId });
 
     return res.status(200).json({
       success: true,
       category,
+      products, // attach products array
     });
   } catch (error) {
     console.error(error);
