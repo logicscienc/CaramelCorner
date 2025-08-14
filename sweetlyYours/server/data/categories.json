@@ -1,0 +1,194 @@
+[
+  {
+    "name": "EastIndianDesserts",
+    "description": "Delicate sweets from East India, rich in jaggery, milk, and coconut flavors.",
+    "image": "images/categories/eastindiandesserts.jpeg",
+    "isFeatured": false,
+    "region": "Indian",
+    "sortOrder": 1
+  },
+    {
+    "name": "NorthIndianDesserts",
+    "description": "A rich collection of traditional North Indian sweets made with pure ghee, aromatic spices, and age-old recipes. From indulgent gulab jamuns to festive kaju katli, these desserts capture the authentic flavors of the north.",
+    "image": "images/categories/northIndian.jpg",
+    "isFeatured": true,
+    "region": "Indian",
+    "sortOrder": 24
+  },
+  {
+    "name": "WestIndianDesserts",
+    "description": "Flavors from the West of India, from Goan bebinca to Gujarati basundi.",
+    "image": "images/categories/westIndianDesserts.jpeg",
+    "isFeatured": false,
+    "region": "Indian",
+    "sortOrder": 2
+  },
+  {
+    "name": "SouthIndianDesserts",
+    "description": "Traditional South Indian sweets with coconut, jaggery, and cardamom.",
+    "image": "images/categories/southIndian.jpg",
+    "isFeatured": false,
+    "region": "Indian",
+    "sortOrder": 3
+  },
+  {
+    "name": "Cakes",
+    "description": "Soft, fluffy cakes for every occasion, baked fresh to perfection.",
+    "image": "images/categories/cakes.jpeg",
+    "isFeatured": true,
+    "region": "Western",
+    "sortOrder": 4
+  },
+  {
+    "name": "Cupcakes",
+    "description": "Mini delights packed with flavor, perfect for any celebration.",
+    "image": "images/categories/cupcakes.jpg",
+    "isFeatured": true,
+    "region": "Western",
+    "sortOrder": 5
+  },
+  {
+    "name": "Brownies",
+    "description": "Rich and fudgy brownies that melt in your mouth.",
+    "image": "images/categories/brownies.jpg",
+    "isFeatured": true,
+    "region": "Western",
+    "sortOrder": 6
+  },
+  {
+    "name": "Donuts",
+    "description": "Fluffy donuts with a variety of glazes and toppings.",
+    "image": "images/categories/donuts.jpg",
+    "isFeatured": true,
+    "region": "Western",
+    "sortOrder": 7
+  },
+  {
+    "name": "Truffles",
+    "description": "Crisp crusts filled with sweet and tangy flavors.",
+    "image": "images/categories/truffles.jpg",
+    "isFeatured": false,
+    "region": "Western",
+    "sortOrder": 8
+  },
+  {
+    "name": "IceCreams",
+    "description": "Creamy, chilled scoops in irresistible flavors.",
+    "image": "images/categories/iceCream.jpg",
+    "isFeatured": true,
+    "region": "Western",
+    "sortOrder": 9
+  },
+  {
+    "name": "FrenchDesserts",
+    "description": "Elegant French pastries and sweets with timeless charm.",
+    "image": "images/categories/frenchDesserts.jpg",
+    "isFeatured": false,
+    "region": "Global",
+    "sortOrder": 10
+  },
+  {
+    "name": "ItalianDesserts",
+    "description": "Classic Italian treats from tiramisu to panna cotta.",
+    "image": "images/categories/ItalianDesserts.jpg",
+    "isFeatured": false,
+    "region": "Global",
+    "sortOrder": 11
+  },
+  {
+    "name": "MiddleEastDesserts",
+    "description": "Sweet flavors of the Middle East, rich in nuts and honey.",
+    "image": "images/categories/middleEast.jpeg",
+    "isFeatured": false,
+    "region": "Global",
+    "sortOrder": 12
+  },
+  {
+    "name": "JapaneseDesserts",
+    "description": "Delicate Japanese confections with unique textures.",
+    "image": "images/categories/japanese_desserts.jpeg",
+    "isFeatured": false,
+    "region": "Global",
+    "sortOrder": 13
+  },
+  {
+    "name": "ClassicFavorites",
+    "description": "All-time favorite desserts loved by everyone.",
+    "image": "images/categories/cakes.jpeg",
+    "isFeatured": true,
+    "region": "Global",
+    "sortOrder": 14
+  },
+  {
+    "name": "ChocolateHeaven",
+    "description": "A paradise for chocolate lovers with rich, indulgent treats.",
+    "image": "images/categories/cakes.jpeg",
+    "isFeatured": true,
+    "region": "Global",
+    "sortOrder": 15
+  },
+  {
+    "name": "FunAndColourful",
+    "description": "Bright and playful desserts that bring joy to any event.",
+    "image": "images/categories/donuts.jpg",
+    "isFeatured": false,
+    "region": "Global",
+    "sortOrder": 16
+  },
+  {
+    "name": "ChilledTreats",
+    "description": "Cool and refreshing desserts to beat the heat.",
+    "image": "images/categories/iceCream.jpg",
+    "isFeatured": false,
+    "region": "Global",
+    "sortOrder": 17
+  },
+  {
+    "name": "DiwaliSpecials",
+    "description": "Traditional Indian sweets to light up your Diwali celebrations.",
+    "image": "images/categories/diwali.jpg",
+    "isFeatured": true,
+    "region": "Indian",
+    "sortOrder": 18
+  },
+  {
+    "name": "ChristmasSpecials",
+    "description": "Festive desserts to sweeten your Christmas celebrations.",
+    "image": "images/categories/christmas.jpeg",
+    "isFeatured": true,
+    "region": "Western",
+    "sortOrder": 19
+  },
+  {
+    "name": "EidSpecials",
+    "description": "Celebratory sweets to mark the joy of Eid.",
+    "image": "images/categories/eid.jpeg",
+    "isFeatured": true,
+    "region": "Indian",
+    "sortOrder": 20
+  },
+  {
+    "name": "WeddingSpecials",
+    "description": "Elegant and luxurious desserts for weddings.",
+    "image": "images/categories/wedding.jpg",
+    "isFeatured": true,
+    "region": "Global",
+    "sortOrder": 21
+  },
+  {
+    "name": "BabyShowerSpecials",
+    "description": "Adorable themed treats perfect for baby showers.",
+    "image": "images/categories/shower.jpeg",
+    "isFeatured": false,
+    "region": "Global",
+    "sortOrder": 22
+  },
+  {
+    "name": "BirthdaySpecials",
+    "description": "Fun and festive desserts to make birthdays extra sweet.",
+    "image": "images/categories/birthday.jpg",
+    "isFeatured": true,
+    "region": "Global",
+    "sortOrder": 23
+  }
+]

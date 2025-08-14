@@ -59,16 +59,14 @@ const navItems = [
     name: "Festive Bites",
     dropdown: [
       "Diwali",
-      "Ganesh Chaturthi",
       "Christmas",
-      "Easter",
-      "Halloween",
-      "Navratri",
+      "eid",
+      
     ],
   },
   {
     name: "Party Pleasers",
-    dropdown: ["Wedding", "Baby Shower", "Birthday", "Celebration"],
+    dropdown: ["Wedding", "Baby Shower", "Birthday"],
   },
   { name: "Cake Builder", dropdown: ["Build Your own  Cake"] },
   { name: "My Fev", dropdown: ["North Indian", "Classic Favorites"] },

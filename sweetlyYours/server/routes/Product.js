@@ -50,7 +50,7 @@ router.delete("/removeFromWishlist", auth, removeFromWishlist);
 // createCategory
 router.post("/createCategory", auth, createCategory);
 // updateCategory
-router.put("/updateCategory", auth, updateCategory);
+router.put("/updateCategory/:categoryId", auth, updateCategory);
 // getAllCategories
 router.get("/getAllCategories", getAllCategories);
 // getOneCategory
