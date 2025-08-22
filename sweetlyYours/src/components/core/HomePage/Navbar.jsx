@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { BsCart } from "react-icons/bs";
 import { FcLike } from "react-icons/fc";
 import NavItems from './NavItems';
+import AnimatedButton from '../../common/AnimatedButton';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -92,11 +93,11 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/signup" onClick={handleRegister} className='hover:text-maroon-900'>
-                  Sign Up
+                <Link to="/signup" onClick={handleRegister} >
+                <AnimatedButton>Sign Up</AnimatedButton>
                 </Link>
-                <Link to="/login" onClick={handleLogin} className='hover:text-maroon-900'>
-                  Log in
+                <Link to="/login" onClick={handleLogin} >
+                <AnimatedButton>Log in</AnimatedButton>
                 </Link>
                 <div className="cursor-pointer hover:text-maroon-900">
                   CONSULTATIONS
