@@ -12,6 +12,18 @@ export default function CategorySlider() {
   const runningTimeRef = useRef(null);
   const navigate = useNavigate();
 
+  const [visibleIndex, setVisibleIndex] = useState(0);
+
+// Trigger staggered animation whenever active slide changes
+useEffect(() => {
+  setVisibleIndex(0); // reset animation on slide change
+  const interval = setInterval(() => {
+    setVisibleIndex((prev) => prev + 1);
+  }, 300); // 0.3s per element
+  return () => clearInterval(interval);
+}, [activeIndex]);
+
+
   // Reset progress bar by forcing reflow
   const resetTimeAnimation = () => {
     if (runningTimeRef.current) {
@@ -38,8 +50,10 @@ export default function CategorySlider() {
     const fetchCategories = async () => {
       try {
         const result = await apiConnector("GET", categories.CATEGORIES_API);
-        const featured = result.data.categories.filter((cat) => cat.isFeatured);
-        setSlides(featured.length > 0 ? featured : result.data.categories);
+        // const featured = result.data.categories.filter((cat) => cat.isFeatured);
+        // setSlides(featured.length > 0 ? featured : result.data.categories);
+        const allCategories = result.data.categories;
+setSlides(allCategories);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -70,8 +84,8 @@ export default function CategorySlider() {
   }
 
   return (
-    <div className="w-full relative">
-      <h2 className="text-4xl font-bold text-maroon-800 text-center mt-8 mb-4">
+    <div className="w-full relative  mb-4">
+      <h2 className="text-6xl font-bold text-maroon-800 text-center mt-20 mb-4">
         Here You Go...
       </h2>
 
@@ -84,7 +98,7 @@ export default function CategorySlider() {
       </div>
 
       {/* Slider */}
-      <div className="relative w-full h-[600px] overflow-hidden">
+      <div className="relative w-full h-[800px] overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={slide._id}
@@ -97,17 +111,23 @@ export default function CategorySlider() {
               backgroundPosition: "center",
             }}
           >
-            <div className="absolute top-1/2 left-10 -translate-y-1/2 w-[400px] text-white z-50">
-              <div className="text-maroon-800 font-bold text-6xl uppercase">
+            <div className="absolute top-1/2 left-20 -translate-y-1/2 w-[400px]  z-50">
+              <div  className={`text-maroon-800 font-bold text-8xl uppercase transition-all duration-500
+      ${visibleIndex >= 1 && index === activeIndex ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
                 SLIDER
               </div>
-              <div className="font-bold text-6xl uppercase drop-shadow-lg">
+              <div  className={`font-bold text-8xl uppercase drop-shadow-lg transition-all duration-500 delay-200
+      ${visibleIndex >= 2 && index === activeIndex ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
                 {slide.name}
               </div>
-              <div className="mt-2 mb-5 text-lg">{slide.description}</div>
+              <div  className={`mt-2 mb-5 text-4lg transition-all duration-500 delay-400
+      ${visibleIndex >= 3 && index === activeIndex ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>{slide.description}</div>
               <button
                 onClick={() => navigate(`/${slide.name}`)}
-                className="px-6 py-3 bg-maroon-800 text-white rounded-lg"
+                 className={`px-8 py-4 bg-maroon-800 text-white rounded-lg transition-all duration-500 delay-600
+      ${visibleIndex >= 4 && index === activeIndex ? "opacity-100 scale-100" : "opacity-0 scale-90"}
+      hover:shadow-glow-pink hover:scale-105 focus:shadow-glow-gold
+      `}
               >
                 See More
               </button>
@@ -116,9 +136,10 @@ export default function CategorySlider() {
         ))}
 
         {/* Small next slides cards */}
-        <div className="absolute top-[20%] right-10 flex flex-col gap-4 z-50">
+        <div className="absolute top-[20%] right-10 flex flex-col gap-4 z-50 ">
           {Array.from({ length: 5 }).map((_, i) => {
-            const nextIndex = (activeIndex + i + 1) % slides.length;
+           let nextIndex = activeIndex + i + 1;
+    if (nextIndex >= slides.length) nextIndex -= slides.length;
             const slide = slides[nextIndex];
             return (
               <div
@@ -131,7 +152,7 @@ export default function CategorySlider() {
                   backgroundPosition: "center",
                 }}
               >
-                <div className="absolute bottom-2 left-2 text-sm font-bold text-white drop-shadow-md">
+                <div className="absolute bottom-10 left-2 text-sm font-bold text-white drop-shadow-md">
                   {slide.name}
                 </div>
               </div>
@@ -143,13 +164,13 @@ export default function CategorySlider() {
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-50">
           <button
             onClick={handlePrev}
-            className="w-12 h-12 rounded-full bg-maroon-800 text-white font-bold text-xl hover:bg-white hover:text-black transition"
+            className="w-20 h-20 rounded-full bg-maroon-800 text-white-500 font-bold text-xl  hover:shadow-glow-gold hover:scale-110 transition-all"
           >
             ‹
           </button>
           <button
             onClick={handleNext}
-            className="w-12 h-12 rounded-full bg-maroon-800 text-white font-bold text-xl hover:bg-white hover:text-black transition"
+             className="w-20 h-20 rounded-full bg-maroon-800 text-white-500 font-bold text-xl hover:bg-white-500 hover:text-black-500 transition"
           >
             ›
           </button>
@@ -158,6 +179,7 @@ export default function CategorySlider() {
     </div>
   );
 }
+
 
 
 
