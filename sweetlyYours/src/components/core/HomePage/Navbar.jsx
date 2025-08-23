@@ -26,7 +26,8 @@ const Navbar = () => {
     setIsLoggedIn(false);
   }
   return (
-    <div>
+    <div className="relative">
+      
       <div className='flex flex-col '>
         {/* stickey strip */}
         <div 
@@ -68,6 +69,7 @@ const Navbar = () => {
 
         </div >
         {/* Logo signup  */}
+        <div className='sticky top-0 z-50 bg-white-500 shadow-md'>
         <div className='flex flex-row justify-between items-center px-4'>
           <div className='-mt-8'>
            <AnimatedLogo/>
@@ -106,6 +108,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
+        </div>
 
         
         {/* navitems */}
@@ -114,6 +117,7 @@ const Navbar = () => {
 
         </div>
       </div>
+      
     </div>
   )
 }

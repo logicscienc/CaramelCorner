@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     colors: {
       maroon: {
+        700: "#9D3C56",
         800: "#981638",
         900: "#701127",
       },
@@ -46,11 +47,11 @@ module.exports = {
 
       // 💡 Added button colors
       btn: {
-        DEFAULT: "#981638", // maroon-800 for button bg
+        DEFAULT: "#701127" , // maroon-900 for button bg
         text: "#FFFFFF", // white text
         bubble: "#FFFFFF", // white bubbles
         bgOverlay: "#701127",
-         hover: "#701127", // maroon-900 overlay for hover effect
+         hover: "#981638", // maroon-800 overlay for hover effect
       },
        glow: {
         gold: "#FFD700",
