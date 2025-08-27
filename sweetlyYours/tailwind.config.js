@@ -4,6 +4,8 @@ module.exports = {
   theme: {
     colors: {
       maroon: {
+      
+       
         700: "#9D3C56",
         800: "#981638",
         900: "#701127",

@@ -6,7 +6,7 @@ const AnimatedButton = ({ children, onClick }) => {
       onClick={onClick}
       className="
     group relative px-6 py-3 rounded-lg font-semibold text-white-500 overflow-hidden
-    bg-btn hover:bg-btn-hover
+    bg-maroon-700 hover:bg-btn-hover
     transition-all duration-200 transform hover:scale-105
   "
     >
