@@ -70,7 +70,7 @@ const Navbar = () => {
           </span>
         </div>
         {/* Logo signup  */}
-        <div className="sticky top-0 z-50 bg-white-500 shadow-md">
+        <div className=" bg-white-500 shadow-md">
           <div className="flex flex-row justify-between items-center px-4 gap-6">
             <div className="-mt-8">
               <AnimatedLogo />
@@ -127,9 +127,9 @@ const Navbar = () => {
         </div>
 
         {/* navitems */}
-        <div>
+        
           <NavItems />
-        </div>
+        
       </div>
     </div>
   );
