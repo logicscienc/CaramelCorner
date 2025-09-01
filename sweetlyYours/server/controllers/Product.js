@@ -287,12 +287,14 @@ exports.getOneProduct = async (req, res) => {
 
 exports.getFeaturedProducts = async (req, res) => {
   try {
+    // take limit from query string, fallback to 10
+    const limit = parseInt(req.query.limit) || 10;
     const products = await Product.find({
       isFeatured: true,
       stock: { $gt: 0 },
     })
       .sort({ createdAt: -1 })
-      .limit(10)
+      .limit(limit)
       .populate("categoryId");
 
     return res.status(200).json({

@@ -23,7 +23,7 @@ const Navbar = () => {
   };
 
   // handle logout
-  const handleLogout = () => {
+  const handleLogout = () => {  
     setIsLoggedIn(false);
   };
   return (
