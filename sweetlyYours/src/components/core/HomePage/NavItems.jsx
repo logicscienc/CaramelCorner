@@ -84,7 +84,7 @@ const NavItems = () => {
 
 
   return (
-    <nav className="sticky top-0 z-50 w-full flex justify-center bg-white-500 shadow-md ">
+    <nav className="sticky top-0 z-50 w-full flex justify-center bg-white-500 shadow-md -mt-4">
       <ul className="flex text-black-500 rounded-t-md max-w-[100%] w-full">
         {/* 🔹 Home link */}
         <li className="relative flex-1 text-center uppercase tracking-wide">

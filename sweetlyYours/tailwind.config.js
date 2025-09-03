@@ -32,6 +32,9 @@ module.exports = {
         900: "#29AB87",
 
       },
+      softpink: {
+         100: "#FFECEC",
+      },
       black: {
         500: "#000000",
         600: "#0A0A0A",
@@ -94,5 +97,7 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+     require('tailwind-clip-path'),
+  ],
 };
