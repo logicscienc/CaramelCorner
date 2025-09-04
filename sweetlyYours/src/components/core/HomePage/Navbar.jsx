@@ -1,58 +1,48 @@
 import React, { useState } from "react";
-import topLeftImage from "../../../assets/Logo/topLeftImage.png";
-import bottomRightImage from "../../../assets/Logo/bottomRightImage.png";
-import AnimatedLogo from "./AnimatedLogo";
 import { Link } from "react-router-dom";
 import { BsCart } from "react-icons/bs";
 import { FcLike } from "react-icons/fc";
-import NavItems from "./NavItems";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../../services/operations/authAPI"
+import topLeftImage from "../../../assets/Logo/topLeftImage.png";
+import bottomRightImage from "../../../assets/Logo/bottomRightImage.png";
+import AnimatedLogo from "./AnimatedLogo";
 import AnimatedButton from "../../common/AnimatedButton";
+import NavItems from "./NavItems";
 import SearchBar from "./SearchBar";
 
+
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const { token, user } = useSelector((state) => state.auth); // Read login state from Redux
 
-  // simulate login success call after backednd success
-  const handleLogin = () => {
-    setIsLoggedIn(true);
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
-  // simulate registration success
-  const handleRegister = () => {
-    setIsLoggedIn(true);
-  };
-
-  // handle logout
-  const handleLogout = () => {  
-    setIsLoggedIn(false);
-  };
   return (
     <div className="relative">
-      <div className="flex flex-col ">
-        {/* stickey strip */}
+      <div className="flex flex-col">
+        {/* Sticky top strip */}
         <div
           className="w-full h-8 flex items-center justify-center text-black-500 text-sm font-bold relative overflow-hidden"
           style={{
             backgroundImage: `repeating-linear-gradient(
-            90deg,
-             #981638 0 60px,
-          #701127 60px 120px
+              90deg,
+              #981638 0 60px,
+              #701127 60px 120px
             )`,
           }}
         >
-          {/* Decorative image overlay */}
           <div className="absolute inset-0 flex">
-            {/* Repeat stripes with images */}
             {Array.from({ length: Math.ceil(window.innerWidth / 120) }).map(
               (_, i) => (
                 <div key={i} className="relative w-[120px] h-full">
-                  {/* Top-left image */}
                   <img
                     src={topLeftImage}
                     alt=""
                     className="absolute top-1 left-1 w-6 h-6 object-contain opacity-80"
                   />
-                  {/* Bottom-right image */}
                   <img
                     src={bottomRightImage}
                     alt=""
@@ -62,30 +52,28 @@ const Navbar = () => {
               )
             )}
           </div>
-
           <span className="relative z-10 drop-shadow-md">
-            Welcome to{" "}
-            <span className="text-white-600 mx-1">Sweetly Yours</span> — Delight
+            Welcome to <span className="text-white-600 mx-1">Sweetly Yours</span> — Delight
             in Indian & Western Desserts!
           </span>
         </div>
-        {/* Logo signup  */}
+
+        {/* Logo & navigation */}
         <div className="sticky top-0 z-50 bg-white-500 shadow-md">
           <div className="flex flex-row justify-between items-center px-4 gap-6">
+            {/* Logo */}
             <div className="-mt-8">
               <AnimatedLogo />
-
-             
             </div>
 
-             {/* search bar */}
-              <div className="flex-1 flex justify-center">
-                <SearchBar />
-              </div>
-            {/* Right side actions */}
+            {/* Search bar */}
+            <div className="flex-1 flex justify-center">
+              <SearchBar />
+            </div>
 
+            {/* Right side actions */}
             <div className="flex flex-row gap-6 items-center font-bold">
-              {isLoggedIn ? (
+              {token ? (
                 <>
                   <Link
                     to="/cart"
@@ -99,40 +87,44 @@ const Navbar = () => {
                   >
                     <FcLike /> Wishlist
                   </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="hover:text-maroon-900"
-                  >
-                    Log out
-                  </button>
-                  <div className="cursor-pointer hover:text-maroon-900">
-                    CONSULTATIONS
+                  <div className="relative group">
+                    <button className="hover:text-maroon-900">
+                      {user?.name || "Profile"}
+                    </button>
+                    {/* Dropdown for logout */}
+                    <div className="absolute right-0 mt-2 w-32 bg-white-500 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 hover:bg-black-700"
+                      >
+                        Logout
+                      </button>
+                    </div>
                   </div>
                 </>
               ) : (
                 <>
-                  <Link to="/signup" onClick={handleRegister}>
+                  <Link to="/signup">
                     <AnimatedButton>Sign Up</AnimatedButton>
                   </Link>
-                  <Link to="/login" onClick={handleLogin}>
+                  <Link to="/login">
                     <AnimatedButton>Log in</AnimatedButton>
                   </Link>
-                  <div className="cursor-pointer hover:text-maroon-900">
-                    CONSULTATIONS
-                  </div>
                 </>
               )}
+              <div className="cursor-pointer hover:text-maroon-900">
+                CONSULTATIONS
+              </div>
             </div>
           </div>
         </div>
 
-        {/* navitems */}
-        <div>
-          <NavItems />
-        </div>
+        {/* Nav items */}
+        <NavItems />
       </div>
     </div>
   );
 };
 
 export default Navbar;
+

@@ -13,34 +13,32 @@ const {
 } = endpoints;
 
 // Send OTP
-export function sendOTP(email, navigate) {
+export function sendOTP(email, navigate, purpose = "registration") {
   return async (dispatch) => {
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
 
     try {
-      const response = await apiConnector("POST", SENDOTP_API, {
-        email,
-        checkUserPresent: true,
-      });
-
-      console.log("SENDOTP API RESPONSE:", response);
-
-      if (!response.data.success) {
-        throw new Error(response.data.message);
-      }
-
+      const response = await apiConnector("POST", SENDOTP_API, { email, purpose });
       toast.success("OTP Sent Successfully");
-      navigate("/verify-email");
-    } catch (error) {
-      console.error("SENDOTP API ERROR:", error);
-      toast.error("Could Not Send OTP");
-    }
 
-    dispatch(setLoading(false));
-    toast.dismiss(toastId);
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+
+      // Return success so component can handle navigation
+      return response.data;
+    } catch (error) {
+      toast.error("Could Not Send OTP");
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+      throw error;
+    }
   };
 }
+
+
+
+
 
 // Sign Up
 export function signUp(name, email, phone, password, otp, navigate) {
@@ -65,14 +63,23 @@ export function signUp(name, email, phone, password, otp, navigate) {
 
       toast.success("Signup Successful");
       navigate("/login");
+
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+
+      return response.data; // Return success for .then() or await
     } catch (error) {
       console.error("SIGNUP API ERROR:", error);
       toast.error(error.response?.data?.message || "Signup Failed");
+
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+
+      throw error; // Throw so component can catch
     }
-    dispatch(setLoading(false));
-    toast.dismiss(toastId);
   };
 }
+
 
 // Login
 export function login(email, password, navigate) {

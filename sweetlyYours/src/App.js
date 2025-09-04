@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import Navbar from "./components/core/HomePage/Navbar";
 import OpenRoute from "./components/core/Auth/OpenRoute";
 import SignupForm from "./components/core/Auth/SignupForm";
+import LoginForm from "./components/core/Auth/LoginForm";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -17,6 +19,26 @@ function App() {
             <OpenRoute>
               <SignupForm />
             </OpenRoute>
+          }
+
+        />
+
+         <Route
+         path="login"
+          element={
+            <OpenRoute>
+              <LoginForm/>
+            </OpenRoute>
+          }
+
+        />
+
+         <Route
+         path="verify-email"
+          element={
+           
+              <VerifyEmail/>
+           
           }
 
         />

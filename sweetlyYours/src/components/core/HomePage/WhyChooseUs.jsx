@@ -68,8 +68,8 @@ const WhyChooseUs = () => {
     rounded-2xl shadow-md p-8 flex flex-col items-center text-center cursor-pointer
     transition-all duration-300 hover:shadow-2xl hover:-translate-y-2
     ${index % 2 === 0 
-      ? "bg-maroon-800 hover:bg-maroon-900"   // even cards
-      : "bg-maroon-900 hover:bg-maroon-800"} // odd cards
+      ? "bg-[#C74B7B] hover:bg-maroon-900"   // even cards
+      : "bg-[#C74B7B] hover:bg-maroon-800"} // odd cards
   `}
 >
               {item.icon}
