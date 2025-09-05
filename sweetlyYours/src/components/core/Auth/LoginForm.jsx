@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../../services/operations/authAPI";
 import macrons from "../../../assets/Images/macrons.jpeg";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -162,12 +163,15 @@ const LoginForm = () => {
             >
               Log in
             </motion.button>
-             {/* Forgot Password */}
+            {/* Forgot Password */}
             <p className="text-center text-black-500 text-sm mt-3">
               Forgot password?{" "}
-              <a href="#" className="text-softpink-100 hover:underline">
+              <Link
+                to="/forgot-password"
+                className="text-softpink-100 hover:underline"
+              >
                 Click here
-              </a>
+              </Link>
             </p>
           </motion.form>
         </motion.div>
@@ -177,4 +181,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-

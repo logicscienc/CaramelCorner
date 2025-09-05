@@ -57,9 +57,11 @@ exports.resetPasswordToken = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   try {
     const { password, token } = req.body;
+     console.log("Incoming reset request:", { password, token });
 
     // find user with token
     const user = await User.findOne({ token });
+     console.log("User found:", user);
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -68,6 +70,7 @@ exports.resetPassword = async (req, res) => {
     }
 
     // check expiry
+     console.log("Token expiry time:", user.resetPasswordExpires, "Current:", Date.now());
     if (user.resetPasswordExpires < Date.now()) {
       return res.status(400).json({
         success: false,
@@ -77,12 +80,15 @@ exports.resetPassword = async (req, res) => {
 
     // hash new password
     const hashedPassword = await bcrypt.hash(password, 10);
+     console.log("Generated hashed password:", hashedPassword);
+
 
     // update password and clear token fields
     user.password = hashedPassword;
     user.token = undefined;
     user.resetPasswordExpires = undefined;
     await user.save();
+     console.log("User updated successfully:", user);
 
     return res.status(200).json({
       success: true,

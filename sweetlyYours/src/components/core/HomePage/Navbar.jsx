@@ -3,14 +3,13 @@ import { Link } from "react-router-dom";
 import { BsCart } from "react-icons/bs";
 import { FcLike } from "react-icons/fc";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../../services/operations/authAPI"
+import { logout } from "../../../services/operations/authAPI";
 import topLeftImage from "../../../assets/Logo/topLeftImage.png";
 import bottomRightImage from "../../../assets/Logo/bottomRightImage.png";
 import AnimatedLogo from "./AnimatedLogo";
 import AnimatedButton from "../../common/AnimatedButton";
 import NavItems from "./NavItems";
 import SearchBar from "./SearchBar";
-
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -53,7 +52,8 @@ const Navbar = () => {
             )}
           </div>
           <span className="relative z-10 drop-shadow-md">
-            Welcome to <span className="text-white-600 mx-1">Sweetly Yours</span> — Delight
+            Welcome to{" "}
+            <span className="text-white-600 mx-1">Sweetly Yours</span> — Delight
             in Indian & Western Desserts!
           </span>
         </div>
@@ -79,13 +79,13 @@ const Navbar = () => {
                     to="/cart"
                     className="hover:text-maroon-900 flex items-center gap-1"
                   >
-                    <BsCart /> Cart
+                    <BsCart />
                   </Link>
                   <Link
                     to="/wishlist"
                     className="hover:text-maroon-900 flex items-center gap-1"
                   >
-                    <FcLike /> Wishlist
+                    <FcLike />
                   </Link>
                   <div className="relative group">
                     <button className="hover:text-maroon-900">
@@ -104,12 +104,8 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Link to="/signup">
-                    <AnimatedButton>Sign Up</AnimatedButton>
-                  </Link>
-                  <Link to="/login">
-                    <AnimatedButton>Log in</AnimatedButton>
-                  </Link>
+                  <AnimatedButton to="/signup">Sign Up</AnimatedButton>
+                  <AnimatedButton to="/login">Log in</AnimatedButton>
                 </>
               )}
               <div className="cursor-pointer hover:text-maroon-900">
@@ -127,4 +123,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

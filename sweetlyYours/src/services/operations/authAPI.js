@@ -84,6 +84,8 @@ export function signUp(name, email, phone, password, otp, navigate) {
 // Login
 export function login(email, password, navigate) {
   return async (dispatch) => {
+
+    console.log("LOGIN DATA SENT TO API:", { email, password }); 
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
