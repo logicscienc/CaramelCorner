@@ -89,7 +89,7 @@ const VerifyEmail = () => {
                   renderInput={(props) => (
                     <input
                       {...props}
-                      className="w-10 h-10 text-center rounded-md bg-transparent border-b-2 border-black-700 text-white-500 text-lg focus:outline-none focus:border-pink-400 transition"
+                      className="w-10 h-10 text-center rounded-md bg-transparent border-b-2 border-black-700 text-black-500 text-lg focus:outline-none focus:border-pink-400 transition"
                     />
                   )}
                 />
