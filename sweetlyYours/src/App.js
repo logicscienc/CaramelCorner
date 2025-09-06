@@ -8,6 +8,7 @@ import LoginForm from "./components/core/Auth/LoginForm";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
+import Eastindian from "./pages/Eastindian";
 
 function App() {
   return (
@@ -58,6 +59,15 @@ function App() {
           element={
             <OpenRoute>
               <UpdatePassword />
+            </OpenRoute>
+          }
+        />
+
+         <Route
+          path="EastIndianDesserts"
+          element={
+            <OpenRoute>
+              <Eastindian />
             </OpenRoute>
           }
         />
