@@ -167,7 +167,7 @@ exports.login = async (req, res) => {
     // get data from req body
     const { email, password } = req.body;
 
-    // validation data
+    // validation
     if (!email || !password) {
       return res.status(403).json({
         success: false,
@@ -175,17 +175,25 @@ exports.login = async (req, res) => {
       });
     }
 
-    // user chaeck exist or not
+    // check if user exists
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "User is not registured, please signup first",
+        message: "User is not registered, please signup first",
       });
     }
 
-    // generate JWT, after password matching
-    if (await bcrypt.compare(password, user.password)) {
+    // 🔹 Temporary debug logs
+    console.log("Password typed by user:", password);
+    console.log("Stored hash in DB:", user.password);
+
+    // check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Password match result:", isMatch);
+
+    if (isMatch) {
+      // generate JWT
       const payload = {
         email: user.email,
         id: user._id,
@@ -194,16 +202,17 @@ exports.login = async (req, res) => {
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "3d",
       });
-      // user.token = token;
-      // await user.save();
+
+      // remove password from user object before sending
       user.password = undefined;
 
-      // create cookie and send response
+      // set cookie and send response
       const options = {
         expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
         httpOnly: true,
       };
-      res.cookie("token", token, options).status(200).json({
+
+      return res.cookie("token", token, options).status(200).json({
         success: true,
         token,
         user,
@@ -216,13 +225,14 @@ exports.login = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.log("Login Error:", error);
     return res.status(500).json({
       success: false,
       message: "Login Failure, please try again",
     });
   }
 };
+
 
 // Login with OTP
 exports.loginWithOTP = async (req, res) => {

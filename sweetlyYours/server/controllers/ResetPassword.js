@@ -79,14 +79,16 @@ exports.resetPassword = async (req, res) => {
     }
 
     // hash new password
-    const hashedPassword = await bcrypt.hash(password, 10);
-     console.log("Generated hashed password:", hashedPassword);
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    //  console.log("Generated hashed password:", hashedPassword);
 
 
     // update password and clear token fields
-    user.password = hashedPassword;
+    user.password = password;
     user.token = undefined;
     user.resetPasswordExpires = undefined;
+    console.log("Password being saved (plain):", password);
+
     await user.save();
      console.log("User updated successfully:", user);
 
