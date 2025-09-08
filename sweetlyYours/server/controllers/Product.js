@@ -197,18 +197,21 @@ exports.updateProduct = async (req, res) => {
 exports.getAllProduct = async (req, res) => {
   try {
     const { categoryId, search, sort } = req.query;
-    const filter = { stock: { $gt: 0 } };
+    const filter = { stock: { $gt: 0 } }; // only products that are in stock
 
+    // Filter by category
     if (categoryId) {
       filter.categoryId = categoryId;
     }
 
+    // Search by product name
     if (search) {
       filter.name = { $regex: search, $options: "i" };
     }
 
     let query = Product.find(filter);
 
+    // Sorting
     switch (sort) {
       case "newest":
         query = query.sort({ createdAt: -1 });
@@ -226,21 +229,12 @@ exports.getAllProduct = async (req, res) => {
         query = query.sort({ createdAt: -1 });
     }
 
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
-    query = query.skip(skip).limit(limit);
-
+   
     const products = await query.exec();
-    const total = await Product.countDocuments(filter);
 
     return res.status(200).json({
       success: true,
       count: products.length,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit),
       products,
     });
   } catch (error) {
@@ -251,6 +245,7 @@ exports.getAllProduct = async (req, res) => {
     });
   }
 };
+
 
 exports.getOneProduct = async (req, res) => {
   try {

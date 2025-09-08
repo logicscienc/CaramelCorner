@@ -106,7 +106,7 @@ const NavItems = () => {
             onMouseEnter={() => setActiveIndex(idx)}
             onMouseLeave={() => setActiveIndex(null)}
           >
-            <div className="py-4 text-lg font-bold transition-all duration-200 text-black-500 hover:text-maroon-800">
+            <div className="py-4  text-lg font-bold transition-all duration-300 text-black-500 hover:text-maroon-800  hover:shadow-[0_0_20px_#800000B3] rounded-md">
               {parent}
               
             </div>

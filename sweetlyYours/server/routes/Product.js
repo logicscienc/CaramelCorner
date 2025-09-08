@@ -18,15 +18,15 @@ const {createCategory, updateCategory, getAllCategories, getOneCategory} = requi
 // createProduct
 router.post("/createProduct", auth, createProduct);
 // updateProduct
-router.put("/updateProduct", auth, updateProduct);
+router.put("/updateProduct/:productId", auth, updateProduct);
 // getAllProduct
 router.get("/getAllProduct", getAllProduct);
 // getOneProduct
-router.get("/getOneProduct", getOneProduct);
+router.get("/getOneProduct/:productId", getOneProduct);
 // getFeaturedProducts
 router.get("/getFeaturedProducts", getFeaturedProducts);
 // getRelatedProducts
-router.get("/getRelatedProducts", getRelatedProducts);
+router.get("/getRelatedProducts/:productId", getRelatedProducts);
 
 
 // Review routes
