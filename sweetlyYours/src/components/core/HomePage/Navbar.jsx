@@ -10,10 +10,64 @@ import AnimatedLogo from "./AnimatedLogo";
 import AnimatedButton from "../../common/AnimatedButton";
 import NavItems from "./NavItems";
 import SearchBar from "./SearchBar";
+import { apiConnector } from "../../../services/apiconnector";
+import { cartEndpoints } from "../../../services/apis";
+import { setCartFromBackend } from "../../../slices/cartSlice";
+import { useEffect } from "react";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const { token, user } = useSelector((state) => state.auth); // Read login state from Redux
+   const { totalItems } = useSelector((state) => state.cart);
+
+
+
+    useEffect(() => {
+    const fetchCart = async () => {
+      if (!token) return;
+
+      try {
+        console.log("Fetching cart for Navbar badge...");
+
+        const response = await apiConnector(
+          "GET",
+          cartEndpoints.GET_CART_API,
+          null,
+          { Authorization: `Bearer ${token}` }
+        );
+
+        console.log("Navbar cart response:", response.data);
+
+        if (response.data.success) {
+          const backendCart = response.data.cart;
+
+          // Map backend cart format
+          const mappedCart = backendCart.items.map((item) => ({
+            ...item.productId,
+            qty: item.quantity,
+          }));
+
+           const totalItems = mappedCart.reduce((acc, item) => acc + item.qty, 0);
+          const total = mappedCart.reduce(
+            (acc, item) => acc + item.price * item.qty,
+            0
+          );
+
+          dispatch(
+            setCartFromBackend({
+              cart: mappedCart,
+              total,
+              totalItems,
+            })
+          );
+        }
+      } catch (err) {
+        console.error("Error fetching cart in Navbar:", err.response?.data || err.message);
+      }
+    };
+
+    fetchCart();
+  }, [dispatch, token]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -76,14 +130,20 @@ const Navbar = () => {
               {token ? (
                 <>
                   <Link
-                    to="/cart"
-                    className="hover:text-maroon-900 flex items-center gap-1"
-                  >
-                    <BsCart />
-                  </Link>
+  to="/cart"
+  className="relative hover:text-maroon-900 flex items-center gap-1 text-4xl"
+>
+  <BsCart />
+  {totalItems > 0 && (
+    <span className="absolute -top-2 -right-2 z-50 bg-[#DC2626] text-black-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+      {totalItems}
+    </span>
+  )}
+</Link>
+
                   <Link
                     to="/wishlist"
-                    className="hover:text-maroon-900 flex items-center gap-1"
+                    className="hover:text-maroon-900 flex items-center gap-1 text-2xl"
                   >
                     <FcLike />
                   </Link>

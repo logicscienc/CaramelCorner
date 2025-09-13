@@ -56,3 +56,11 @@ export const cartEndpoints = {
     REMOVE_FROM_CART_API: BASE_URL + "/cart/removeCartItem",
     CLEAR_CART_API: BASE_URL + "/cart/clearCart",
 }
+
+// wishlist endpoints
+export const wishlistEndpoint = {
+    ADD_TO_WISHLIST_API: BASE_URL + "/product/addToWishlist",
+    GET_WISHLIST_API: BASE_URL + "/product/getWishlist",
+    REMOVE_FROM_WISHLIST: BASE_URL + "/product/removeFromWishlist",
+
+}

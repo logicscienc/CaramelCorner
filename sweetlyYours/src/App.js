@@ -29,6 +29,8 @@ import MiddleEast from "./pages/MiddleEast"
 import Truffles from "./pages/Truffles"
 import Wedding from "./pages/Wedding";
 import Product from "./pages/Product";
+import Cart from "./pages/Cart";
+import Wishlist from "./pages/Wishlist";
 
 
 function App() {
@@ -87,174 +89,174 @@ function App() {
           <Route
           path="EastIndianDesserts"
           element={
-            <OpenRoute>
+           
               <Eastindian />
-            </OpenRoute>
+            
           }
         />
          <Route
           path="WestIndianDesserts"
           element={
-            <OpenRoute>
+           
               <WestIndian />
-            </OpenRoute>
+            
           }
         />
          <Route
           path="SouthIndianDesserts"
           element={
-            <OpenRoute>
+            
               <SouthIndian />
-            </OpenRoute>
+            
           }
         />
          <Route
           path="Cakes"
           element={
-            <OpenRoute>
+            
               <Cakes />
-            </OpenRoute>
+            
           }
         />
          <Route
           path="Cupcakes"
           element={
-            <OpenRoute>
+            
               <Cupcakes />
-            </OpenRoute>
-          }
+          } 
         /> 
          <Route
           path="Brownies"
           element={
-            <OpenRoute>
+            
               <Brownies />
-            </OpenRoute>
+           
           }
         /> 
          <Route
           path="Donuts"
           element={
-            <OpenRoute>
+            
               <Donuts />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="Truffles"
           element={
-            <OpenRoute>
+            
               <Truffles />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="IceCreams"
           element={
-            <OpenRoute>
+            
               <IceCream />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="French Desserts"
           element={
-            <OpenRoute>
+           
               <French />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="Italian Desserts"
           element={
-            <OpenRoute>
+            
               <Italian />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="MiddleEast Desserts"
           element={
-            <OpenRoute>
+            
               <MiddleEast />
-            </OpenRoute>
+           
           }
         /> 
          <Route
           path="Japanese Desserts"
           element={
-            <OpenRoute>
+           
               <Japanese />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="FunAndColourful"
           element={
-            <OpenRoute>
+            
               <FunAndColourful />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="ChilledTreats"
           element={
-            <OpenRoute>
+            
               <IceCream />
-            </OpenRoute>
+            
           }
         /> 
         <Route
           path="Diwali Specials"
           element={
-            <OpenRoute>
+            
               <Diwali />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="ChristmasSpecials"
           element={
-            <OpenRoute>
+            
               <Christmas />
-            </OpenRoute>
+           
           }
         /> 
          <Route
           path="Eid Specials"
           element={
-            <OpenRoute>
+            
               <Eid />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="WeddingSpecials"
           element={
-            <OpenRoute>
+            
               <Wedding />
-            </OpenRoute>
+           
           }
         /> 
          <Route
           path="Baby Shower"
           element={
-            <OpenRoute>
+            
               <BabyShower />
-            </OpenRoute>
+            
           }
         /> 
          <Route
           path="Birthday"
           element={
-            <OpenRoute>
+            
               <Birthday />
-            </OpenRoute>
+            
           }
         /> 
 
         <Route path="/product/:productId" element={<Product />} />
-        
+          <Route path="/cart" element={<Cart />} /> 
+          <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
 
     </div>

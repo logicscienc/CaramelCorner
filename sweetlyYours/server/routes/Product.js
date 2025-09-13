@@ -43,7 +43,7 @@ router.post("/addToWishlist", auth, addToWishlist);
 // getWishlist
 router.get("/getWishlist", auth, getWishlist);
 // removeFromWishlist
-router.delete("/removeFromWishlist", auth, removeFromWishlist);
+router.delete("/removeFromWishlist/:productId", auth, removeFromWishlist);
 
 
 // Category routes

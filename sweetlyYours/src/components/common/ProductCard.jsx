@@ -2,12 +2,18 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FiHeart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { wishlistEndpoint } from "../../services/apis"
+import {setWishlistFromBackend} from "../../slices/wishlistSlice";
+import {toast} from "react-hot-toast"
+import { apiConnector } from "../../services/apiconnector";
+import { useDispatch } from "react-redux";
 
 
 
 const ProductCard = ({ product, onAddToWishlist }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const navigate = useNavigate();
+   const dispatch = useDispatch();
 
   // Toggle wishlist state
   const handleWishlistToggle = (e) => {
@@ -24,6 +30,48 @@ const ProductCard = ({ product, onAddToWishlist }) => {
     navigate(`/product/${product._id}`);
   };
 
+const handleAddToWishlist = async (e) => {
+  e.stopPropagation(); // Prevent card click navigation
+
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please log in to add products to your wishlist");
+      navigate("/login");
+      return;
+    }
+
+    if (product.stock === 0) {
+      toast.error("This product is out of stock");
+      return;
+    }
+
+    const requestBody = { productId: product._id }; // quantity removed unless required by backend
+    console.log("Sending add to wishlist request:", requestBody);
+
+    const response = await apiConnector(
+      "POST",
+      wishlistEndpoint.ADD_TO_WISHLIST_API,
+      requestBody,
+      { Authorization: `Bearer ${token}` }
+    );
+
+    console.log("Add to wishlist response:", response.data);
+
+    if (response.data.success) {
+      dispatch(setWishlistFromBackend(response.data.wishlist)); // ✅ updated to wishlist
+      toast.success("Product added to wishlist");
+      setIsWishlisted(true);
+    } else {
+      toast.error(response.data.message || "Failed to add product to wishlist");
+    }
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    toast.error("Could not add product to wishlist");
+  }
+};
+
+
   return (
     <motion.div
       className="relative h-72 rounded-2xl p-3 shadow-lg bg-[#FEF9C3] transition hover:scale-105 hover:shadow-xl hover:cursor-pointer"
@@ -39,7 +87,10 @@ const ProductCard = ({ product, onAddToWishlist }) => {
     >
       {/* Wishlist Heart */}
       <button
-        onClick={handleWishlistToggle}
+        onClick={(e) => {
+    handleWishlistToggle(e);
+    handleAddToWishlist(e);
+  }}
         className="absolute top-3 right-3 z-30 p-2 rounded-full bg-[#FFFFFFCC] backdrop-blur-md hover:bg-white transition"
       >
         <FiHeart
