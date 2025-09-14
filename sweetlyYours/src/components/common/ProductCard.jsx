@@ -30,25 +30,72 @@ const ProductCard = ({ product, onAddToWishlist }) => {
     navigate(`/product/${product._id}`);
   };
 
+// const handleAddToWishlist = async (e) => {
+//   e.stopPropagation(); // Prevent card click navigation
+
+//   try {
+//     const token = localStorage.getItem("token");
+//     if (!token) {
+//       toast.error("Please log in to add products to your wishlist");
+//       navigate("/login");
+//       return;
+//     }
+
+//     if (product.stock === 0) {
+//       toast.error("This product is out of stock");
+//       return;
+//     }
+
+//     const requestBody = { productId: product._id }; // quantity removed unless required by backend
+//     console.log("Sending add to wishlist request:", requestBody);
+
+//     const response = await apiConnector(
+//       "POST",
+//       wishlistEndpoint.ADD_TO_WISHLIST_API,
+//       requestBody,
+//       // { Authorization: `Bearer ${token}` }
+//       { Authorization: `Bearer ${token.replace(/"/g, "")}` }
+//     );
+
+//     console.log("Add to wishlist response:", response.data);
+
+//     if (response.data.success) {
+//       dispatch(setWishlistFromBackend(response.data.wishlist)); //  updated to wishlist
+//       toast.success("Product added to wishlist");
+//       setIsWishlisted(true);
+//     } else {
+//       toast.error(response.data.message || "Failed to add product to wishlist");
+//     }
+//   } catch (error) {
+//     console.error("Error adding to wishlist:", error);
+//     toast.error("Could not add product to wishlist");
+//   }
+// };
+
 const handleAddToWishlist = async (e) => {
   e.stopPropagation(); // Prevent card click navigation
 
   try {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    // Get token from localStorage and clean it
+    const rawToken = localStorage.getItem("token");
+    if (!rawToken) {
       toast.error("Please log in to add products to your wishlist");
       navigate("/login");
       return;
     }
+    const token = rawToken.replace(/"/g, "");
 
+    // Check stock
     if (product.stock === 0) {
       toast.error("This product is out of stock");
       return;
     }
 
-    const requestBody = { productId: product._id }; // quantity removed unless required by backend
+    // Prepare request body
+    const requestBody = { productId: product._id };
     console.log("Sending add to wishlist request:", requestBody);
 
+    // Make API request
     const response = await apiConnector(
       "POST",
       wishlistEndpoint.ADD_TO_WISHLIST_API,
@@ -56,14 +103,21 @@ const handleAddToWishlist = async (e) => {
       { Authorization: `Bearer ${token}` }
     );
 
-    console.log("Add to wishlist response:", response.data);
+    console.log("Add to wishlist full response:", response.data);
 
-    if (response.data.success) {
-      dispatch(setWishlistFromBackend(response.data.wishlist)); // ✅ updated to wishlist
+    // Handle response safely
+    if (response.data?.success) {
+      // Backend might return wishlist array or single item
+      const wishlist =
+        response.data.wishlist ||
+        (response.data.wishlistItem ? [response.data.wishlistItem] : []);
+
+      dispatch(setWishlistFromBackend(wishlist));
+
       toast.success("Product added to wishlist");
       setIsWishlisted(true);
     } else {
-      toast.error(response.data.message || "Failed to add product to wishlist");
+      toast.error(response.data?.message || "Could not add product to wishlist");
     }
   } catch (error) {
     console.error("Error adding to wishlist:", error);

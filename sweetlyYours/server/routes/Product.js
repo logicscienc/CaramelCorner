@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
-const { auth } = require("../middlewares/auth")
+// const { auth } = require("../middlewares/auth")
+const { auth, isCustomer } = require("../middlewares/auth")
 
 // importing Product controller function
 const {createProduct, updateProduct, getAllProduct, getOneProduct , getFeaturedProducts, getRelatedProducts} = require("../controllers/Product");
@@ -39,11 +40,11 @@ router.delete("/deleteReview", auth, deleteReview);
 
 // Wishlist routes
 // addToWishlist
-router.post("/addToWishlist", auth, addToWishlist);
+router.post("/addToWishlist", auth, isCustomer, addToWishlist);
 // getWishlist
-router.get("/getWishlist", auth, getWishlist);
+router.get("/getWishlist", auth, isCustomer, getWishlist);
 // removeFromWishlist
-router.delete("/removeFromWishlist/:productId", auth, removeFromWishlist);
+router.delete("/removeFromWishlist/:productId", auth, isCustomer, removeFromWishlist);
 
 
 // Category routes
@@ -56,5 +57,5 @@ router.get("/getAllCategories", getAllCategories);
 // getOneCategory
 router.get("/getOneCategory/:categoryId", getOneCategory);
 
-module.exports = router;
+module.exports = router; 
 

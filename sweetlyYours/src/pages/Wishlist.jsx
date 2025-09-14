@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { cartEndpoints } from "../services/apis";
 
 import { apiConnector } from "../services/apiconnector";
 import { wishlistEndpoint } from "../services/apis"; 
@@ -10,6 +11,7 @@ import {
   resetWishlist,
 } from "../slices/wishlistSlice";
 import { addToCart } from "../slices/cartSlice";
+import { setCartFromBackend } from "../slices/cartSlice"; 
 
 const Wishlist = () => {
   const dispatch = useDispatch();
@@ -86,20 +88,71 @@ const Wishlist = () => {
   };
 
   // Add product to cart
-  const handleAddToBag = (product) => {
-    dispatch(addToCart({ ...product, qty: 1 }));
-    toast.success("Added to bag");
-  };
+  const handleAddToBag = async (product) => {
+  if (!token) return toast.error("Please log in to add items to cart");
+
+  try {
+    const response = await apiConnector(
+      "POST",
+      cartEndpoints.ADD_TO_CART_API,
+      { productId: product._id, quantity: 1 },
+      { Authorization: `Bearer ${token.replace(/"/g, "")}` }
+    );
+
+    if (response.data?.success) {
+      dispatch(addToCart({ ...product, qty: 1 })); // Update Redux
+      toast.success("Added to bag");
+    } else {
+      toast.error(response.data?.message || "Could not add to cart");
+    }
+  } catch (err) {
+    console.error("Error adding to cart:", err.response?.data || err.message);
+    toast.error("Could not add to cart");
+  }
+};
+
 
   // Add all wishlist items to cart
-  const handleAddAllToBag = () => {
-    if (!wishlist || wishlist.length === 0) return toast("No items to add");
+const handleAddAllToBag = async () => {
+  if (!token) return toast.error("Please log in to add items to cart");
 
-    wishlist.forEach((product) => {
-      dispatch(addToCart({ ...product, qty: 1 }));
-    });
-    toast.success("All items added to bag");
-  };
+  if (!wishlist || wishlist.length === 0) {
+    toast.error("Your wishlist is empty");
+    return;
+  }
+
+  try {
+    // Prepare the array of products to send to backend
+    const products = wishlist.map((item) => ({
+      productId: item._id,
+      quantity: 1, // default quantity
+    }));
+
+    console.log("Sending bulk add request:", products);
+
+    const response = await apiConnector(
+      "POST",
+      cartEndpoints.ADD_TO_CART_API,
+      { products }, // Send as object with key `products`
+      { Authorization: `Bearer ${token.replace(/"/g, "")}` }
+    );
+
+    console.log("Bulk Add Response:", response.data);
+
+    if (response.data.success) {
+      toast.success("All products added to cart!");
+      dispatch(setCartFromBackend(response.data.cart)); // update Redux cart
+    } else {
+      toast.error(response.data.message || "Failed to add all products");
+    }
+  } catch (error) {
+    console.error("Error adding all products:", error.response?.data || error.message);
+    toast.error("Could not add all products to cart");
+  }
+};
+
+
+
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] py-12 px-4">
