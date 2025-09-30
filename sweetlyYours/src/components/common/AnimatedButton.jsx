@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 const AnimatedButton = ({ children, onClick, to }) => {
   const classes = `
-    group relative px-6 py-3 rounded-lg font-semibold text-white-500 overflow-hidden
-    bg-maroon-700 hover:bg-btn-hover
-    transition-all duration-200 transform hover:scale-105
+    group relative px-6 py-3 rounded-lg font-semibold text-white
+    overflow-hidden bg-maroon-700 hover:bg-maroon-800
+    transition-all duration-300 transform hover:scale-105
   `;
 
   // If "to" is passed, render as a Link
