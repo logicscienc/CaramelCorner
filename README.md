@@ -37,7 +37,7 @@ SweetlyYours is a full-stack web application for ordering sweets online with sec
    ```bash
    git clone https://github.com/yourusername/SweetlyYours.git
    cd SweetlyYours
-2. **Install Dependencies
+2. Install Dependencies
    ```bash
    npm install
 3. Environment Setup
@@ -48,7 +48,7 @@ MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 PAYMENT_KEY=your_payment_key
 ```
-4. **Run the App
+4. Run the App
  ```bash
 npm run dev
 ```
