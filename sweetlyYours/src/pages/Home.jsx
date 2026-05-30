@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-
+import MobileCategorySlider from "../components/core/HomePage/MobileCategorySlider";
 import Navbar from "../components/core/HomePage/Navbar";
 import indian from "../assets/Images/indian.jpg";
 import download from "../assets/Images/download.jpeg";
@@ -114,8 +114,16 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Section 3 */}
-      <CategorySlider />
+     
+      {/* Section 3 Desktop */}
+<div className="hidden md:block">
+  <CategorySlider />
+</div>
+
+{/* Section 3 Mobile */}
+<div className="block md:hidden">
+  <MobileCategorySlider />
+</div>
 
       {/* Section 4 */}
       <div className="flex flex-col text-center gap-4 mt-16">
@@ -219,47 +227,47 @@ const Home = () => {
 
       {/* Section 7 */}
       <div className="flex flex-row w-full h-[500px] mt-4 ">
-        {" "}
-        {/* left section */}{" "}
+        
+        {/* left section */}
         <div className="relative w-[40%]">
-          {" "}
+          
           <img
             src={butterfly}
             alt="Build your own cake"
             className="w-full h-full object-cover "
-          />{" "}
+          />
           <div className="absolute inset-0 flex flex-col items-start bg-black/40">
-            {" "}
+            
             <h2 className="text-maroon-800 text-6xl mt-52 ml-6">
-              {" "}
+              
               <span className="italic font-light text-maroon-800 animate-[fadeIn_1s_ease-in-out_0.3s_forwards]">
-                {" "}
-                Build your{" "}
-              </span>{" "}
-              <br />{" "}
+                
+                Build your
+              </span>
+              <br />
               <span className="italic font-light animate-[fadeIn_1s_ease-in-out_0.3s_forwards]">
-                {" "}
-                own CAKE{" "}
-              </span>{" "}
-            </h2>{" "}
-          </div>{" "}
-        </div>{" "}
-        {/* right section */}{" "}
+                
+                own CAKE
+              </span>
+            </h2>
+          </div>
+        </div>
+        {/* right section */}
         <div className="relative w-[60%]">
-          {" "}
+         
           <img
             src={OrderFlow[currentIndex].src}
             alt={OrderFlow[currentIndex].text}
             className="w-full h-full object-cover transition-all duration-500"
-          />{" "}
+          />
           <div className="absolute inset-0 flex items-end justify-end bg-black/40 mb-20 mr-6">
-            {" "}
+           
             <h2 className="text-black-500 text-6xl italic font-light animate-[fadeIn_1s_ease-in-out_0.3s_forwards]">
-              {" "}
-              {OrderFlow[currentIndex].text}{" "}
-            </h2>{" "}
-          </div>{" "}
-        </div>{" "}
+              
+              {OrderFlow[currentIndex].text}
+            </h2>
+          </div>
+        </div>
       </div>
 
       {/* Section 8 */}

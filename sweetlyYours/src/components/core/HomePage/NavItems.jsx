@@ -117,6 +117,7 @@ const NavItems = () => {
                 {getDropdown(parent).map((subItem, subIdx) => (
                   <li
                     key={subIdx}
+                     
                     className={`px-4 py-2 font-bold animate-slideInLeft ${
                       matchRoute(`/${subItem}`)
                         ? "text-maroon-800"
@@ -124,7 +125,10 @@ const NavItems = () => {
                     }`}
                     style={{ animationDelay: `${0.1 + subIdx * 0.03}s` }}
                   >
-                    <Link to={`/${subItem}`}>{subItem}</Link>
+                    <Link
+                     to={`/${subItem}`}>
+                      
+                      {subItem}</Link>
                   </li>
                 ))}
               </ul>
