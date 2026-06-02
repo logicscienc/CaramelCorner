@@ -9,62 +9,79 @@ exports.createOrder = async (req, res) => {
     const userId = req.user.id;
     const { paymentMethod, address } = req.body;
 
-    // validate paymentMethod and address
+    console.log("DEBUG paymentMethod:", paymentMethod);
+    console.log("DEBUG address:", address);
+
     if (!paymentMethod || !address) {
-      return res.json({
+      return res.status(400).json({
         success: false,
-        message:
-          "Please provide PaymentMethod and address, where you want your happy meal.",
+        message: "Payment method and address are required",
       });
     }
 
-    // get user's cart info.
-    const cart = await Cart.findOne({ userId }).populate("items.productId");
-    if (!cart || cart.items.length === 0) {
-      return res.status(400).json({ success: false, message: "Cart is empty" });
+    const requiredFields = [
+      "recipientName",
+      "phone",
+      "street",
+      "city",
+      "pincode",
+      "state",
+      "country",
+    ];
+
+    for (let field of requiredFields) {
+      if (!address[field]) {
+        return res.status(400).json({
+          success: false,
+          message: `Missing ${field} in address`,
+        });
+      }
     }
 
-    // prepare products array for the order from the populated cart
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
+
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Cart is empty",
+      });
+    }
+
     const products = cart.items.map((item) => ({
       productId: item.productId._id,
       quantity: item.quantity,
-      price: item.productId.price, // taken directly from populated product
+      price: item.productId.price,
     }));
 
-    // calculate total amount directley from populate data
     const totalAmount = cart.items.reduce(
       (acc, item) => acc + item.productId.price * item.quantity,
       0
     );
 
-    // create the order
     const order = await Order.create({
       userId,
       products,
       totalAmount,
       paymentMethod,
-      paymentStatus: "Pending", // stays Pending until payment is done
+      paymentStatus: "Pending",
       orderStatus: "Placed",
       address,
     });
 
-    // clear the cart after creating the order and save changes in the db
     cart.items = [];
     await cart.save();
 
     return res.status(201).json({
       success: true,
+      orderId: order._id,
       order,
-      message:
-        paymentMethod === "COD"
-          ? "Order placed successfully (COD)"
-          : "Order created, proceed to payment",
     });
+
   } catch (error) {
     console.error("Error creating order:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to create order",
+      message: error.message,
     });
   }
 };
@@ -73,139 +90,194 @@ exports.createOrder = async (req, res) => {
 exports.getUserOrders = async (req, res) => {
   try {
     const userId = req.user.id;
+
     const orders = await Order.find({ userId })
-    .sort({ createdAt: -1 })
-     // fields to populate: you can include only specific fields from Product model
-     .populate("products.productId", "name price image"); 
-    ;
-    return res.status(200).json({ success: true, orders });
+      .sort({ createdAt: -1 })
+      .populate("products.productId", "name price image");
+
+    if (!orders.length) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        orders: [],
+        message: "No orders found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders,
+    });
+
   } catch (error) {
     console.error("Error fetching user orders:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Could not fetch orders" });
+
+    return res.status(500).json({
+      success: false,
+      message: "Could not fetch orders",
+      error: error.message,
+    });
   }
 };
 
 // get order by id, if a user wants to know about there resent order. 
 exports.getOrderById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { orderId } = req.params;
     const userId = req.user.id;
 
-    const order = await Order.findById(id).populate("products.productId");
-    if (!order || order.userId.toString() !== userId) {
-      return res.status(404).json({ success: false, message: "Order not found" });
+    const order = await Order.findById(orderId)
+      .populate("products.productId", "name price image description")
+      .populate("userId", "name email phone");
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
     }
 
-    return res.status(200).json({ success: true, order });
+    // Security check
+    if (order.userId._id.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      order,
+    });
+
   } catch (error) {
     console.error("Error fetching order:", error);
-    return res.status(500).json({ success: false, message: "Could not fetch order" });
+
+    return res.status(500).json({
+      success: false,
+      message: "Could not fetch order",
+      error: error.message,
+    });
   }
 };
 
 // for canceling the order
 exports.cancelOrder = async (req, res) => {
-  try{
-    // Order ID from URL
-    const { id } = req.params;
-    // Cancellation reason from user
+  try {
+    const { orderId } = req.params;
     const { reason } = req.body;
     const userId = req.user.id;
 
-    // validate
-     if (!reason) {
-      return res.json({
-        success: false,
-        message:
-          "Please provide the reason for cancellation.",
-      });
-    }
-
-    // find the order
-    const order = await Order.findById(id)
-    .populate("products.productId")
-    .populate("userId", "email");
-    if (!order || order.userId._id.toString() !== userId) {
-      return res.status(404).json({ success: false, message: "Order not found" });
-    }
-
-    // only allow cancellation if the order hasn't progressed
-     if (order.orderStatus !== "Placed") {
+    if (!reason) {
       return res.status(400).json({
         success: false,
-        message: "Cannot cancel order at this stage",
+        message: "Please provide cancellation reason",
       });
     }
 
-    // save cancellation reason
-    order.cancellationReason = reason || "No reason provided";
+    const order = await Order.findById(orderId)
+      .populate("products.productId")
+      .populate("userId", "name email");
 
-    // handle refunds if payment was online and already paid
-     if (order.paymentStatus === "Paid" && order.paymentMethod !== "COD") {
-      try {
-        const refund = await instance.payments.refund(order.transactionId, {
-          amount: order.totalAmount * 100, 
-        });
-
-        // Store refund details
-        order.refundId = refund.id;
-        order.refundStatus = "Initiated";
-        order.paymentStatus = "Refunded";
-         // Send refund email (inline)
-
-          await mailSender(
-          order.userId.email,
-          "Refund Initiated for Your Order",
-          `
-            <h2>Refund Initiated</h2>
-            <p>We have initiated a refund for your order <b>${order._id}</b>.</p>
-            <p>Refund Amount: ₹${order.totalAmount}</p>
-            <p>Refund ID: ${order.refundId}</p>
-            <p>The amount will be credited to your account in 5-7 working days.</p>
-          `
-        );
-      } catch (refundError) {
-        console.error("Refund failed:", refundError);
-        return res.status(500).json({
-          success: false,
-          message: "Order cancelled but refund could not be initiated. Contact support.",
-        });
-      }
+    if (!order || order.userId._id.toString() !== userId) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
     }
 
-    // update order status
-     order.orderStatus = "Cancelled";
+    // Already cancelled
+    if (order.orderStatus === "Cancelled") {
+      return res.status(400).json({
+        success: false,
+        message: "Order already cancelled",
+      });
+    }
+
+    // Cannot cancel after preparation starts
+    if (
+      order.orderStatus === "Preparing" ||
+      order.orderStatus === "Out For Delivery" ||
+      order.orderStatus === "Delivered"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Order cannot be cancelled now",
+      });
+    }
+
+    // Save cancellation reason
+    order.cancellationReason = reason;
+    order.orderStatus = "Cancelled";
+
     await order.save();
-     // Send cancellation email (inline)
+
+    // Send cancellation email
     await mailSender(
       order.userId.email,
-      "Order Cancelled",
+      "Order Cancelled - Sweetly Yours",
       `
-        <h2>Order Cancelled</h2>
-        <p>Your order <b>${order._id}</b> has been cancelled.</p>
-        <p>Reason: ${reason}</p>
-        <p>If this was a mistake, please contact our support team.</p>
+      <h2>Order Cancelled ❌</h2>
+
+      <p>Hello ${order.userId.name},</p>
+
+      <p>Your order has been cancelled successfully.</p>
+
+      <p><b>Order ID:</b> ${order._id}</p>
+      <p><b>Reason:</b> ${reason}</p>
+
+      <p>If you need any assistance, please contact our support team.</p>
+
+      <p>Sweetly Yours ❤️</p>
       `
     );
 
-     return res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Order cancelled successfully",
       order,
     });
 
+  } catch (error) {
+    console.error("Cancel Order Error:", error);
 
-
-
-  }
-  catch(error){
-     console.error("Error cancelling order:", error);
     return res.status(500).json({
       success: false,
       message: "Could not cancel order",
+      error: error.message,
     });
+  }
+};
 
+// update irder status
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { orderStatus } = req.body;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    order.orderStatus = orderStatus;
+
+    await order.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Order status updated",
+      order,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error updating order status",
+    });
   }
 };

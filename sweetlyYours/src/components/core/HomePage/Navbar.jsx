@@ -23,6 +23,7 @@ import tongueout from "../../../assets/Logo/tongueout.png";
 const Navbar = () => {
   const dispatch = useDispatch();
   const { token, user } = useSelector((state) => state.auth); // Read login state from Redux
+  console.log("Navbar token:", token);
   const { totalItems } = useSelector((state) => state.cart);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

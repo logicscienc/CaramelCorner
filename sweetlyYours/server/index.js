@@ -8,7 +8,7 @@ const productRoutes = require("./routes/Product");
 const cartRoutes = require("./routes/Cart");
 const orderRoutes = require("./routes/Order");
 const paymentRoutes = require("./routes/Payment");
-
+const addressRoutes = require("./routes/Address");
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -48,6 +48,7 @@ app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/order", orderRoutes);
+app.use("/api/v1/address", addressRoutes);
 
 //def route
 

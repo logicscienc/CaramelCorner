@@ -14,12 +14,7 @@ export const endpoints = {
   RESETPASSWORD_API: BASE_URL + "/auth/reset-password",
 }
 
-// customer endpoint for payment
-export const customerEndpoints = {
-     COURSE_PAYMENT_API: BASE_URL + "/payment/capturePayment",
-  COURSE_VERIFY_API: BASE_URL + "/payment/verifyPayment",
-  SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/payment/sendPaymentSuccessEmail",
-}
+
 
 // products endpoints
 export const productEndpoints = {
@@ -39,13 +34,7 @@ export const ratingEndpoints = {
     REVIEWS_DETAILS_API: BASE_URL + "/product/getProductReviews",
 }
 
-// order endpoints
-export const orderEndpoints = {
-    CREATE_ORDER_API: BASE_URL + "/order/orders",
-    GET_USER_ORDER_API: BASE_URL + "/order/orders",
-    GET_ORDER_BY_ID_API: BASE_URL + "/order/orders/:orderId",
-    CANCEL_ORDER_API: BASE_URL + "/order/orders/:orderId/cancel",
-}
+
 
 
 // cart endpoints
@@ -64,3 +53,31 @@ export const wishlistEndpoint = {
     REMOVE_FROM_WISHLIST: BASE_URL + "/product/removeFromWishlist",
 
 }
+
+// Address endpoints
+export const addressEndpoints = {
+  ADD_ADDRESS_API: BASE_URL + "/address",
+  GET_ADDRESSES_API: BASE_URL + "/address",
+  UPDATE_ADDRESS_API: BASE_URL + "/address/:addressId",
+  DELETE_ADDRESS_API: BASE_URL + "/address/:addressId",
+  SET_DEFAULT_ADDRESS_API: BASE_URL + "/address/:addressId/default",
+};
+
+// Order endpoints
+export const orderEndpoints = {
+  CREATE_ORDER_API: BASE_URL + "/order/orders",
+  GET_USER_ORDER_API: BASE_URL + "/order/orders",
+  GET_ORDER_BY_ID_API: BASE_URL + "/order/orders/:orderId",
+  CANCEL_ORDER_API: BASE_URL + "/order/orders/:orderId/cancel",
+};
+
+// payment endpoints
+export const paymentEndpoints = {
+  CREATE_RAZORPAY_ORDER_API:
+    BASE_URL + "/payment/capture-payment",
+
+  VERIFY_PAYMENT_API:
+    BASE_URL + "/payment/verify-payment",
+};
+
+

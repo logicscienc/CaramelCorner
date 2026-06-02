@@ -7,6 +7,9 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
+  
+
     products: [
       {
         productId: {
@@ -25,10 +28,12 @@ const orderSchema = new mongoose.Schema(
         },
       },
     ],
+
     totalAmount: {
       type: Number,
       required: true,
     },
+
     paymentMethod: {
       type: String,
       enum: ["COD", "UPI", "Card", "NetBanking"],
@@ -41,34 +46,56 @@ const orderSchema = new mongoose.Schema(
       default: "Pending",
       required: true,
     },
-    transactionId: {
-        type:String,
-        default: null,
+
+    razorpayOrderId: {
+      type: String,
+      default: null,
     },
+
+    razorpayPaymentId: {
+      type: String,
+      default: null,
+    },
+
+    paymentGateway: {
+      type: String,
+      enum: ["Razorpay", "COD"],
+      default: "Razorpay",
+    },
+
     orderStatus: {
       type: String,
-      enum: ["Placed", "Preparing", "Dispatched", "Delivered"],
+      enum: [
+        "Placed",
+        "Confirmed",
+        "Preparing",
+        "Out For Delivery",
+        "Delivered",
+        "Cancelled",
+      ],
       default: "Placed",
       required: true,
     },
-     // Added for refund tracking
+
     refundId: {
       type: String,
       default: null,
     },
+
     refundStatus: {
       type: String,
       enum: ["NotRequired", "Initiated", "Completed"],
       default: "NotRequired",
     },
 
-    //    no need of an array of address because one user have one address.
     address: {
-      street: { type: String },
-      city: { type: String },
-      pincode: { type: String },
-      state: { type: String },
-      country: { type: String },
+      recipientName: { type: String, required: true },
+      phone: { type: String, required: true },
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      pincode: { type: String, required: true },
+      state: { type: String, required: true },
+      country: { type: String, required: true },
     },
   },
   { timestamps: true }

@@ -180,6 +180,10 @@ const Cart = () => {
     }
   };
 
+  const handleCheckout = () => {
+  navigate("/address");
+};
+
 
 
   // ==============================
@@ -331,15 +335,24 @@ const Cart = () => {
 
         {/* bottom section placeholder */}
         <div className="mt-8">
-          <div className="bg-white-500 rounded-xl shadow-md p-6 flex flex-row font-semibold text-xl">
+  <div className="bg-white rounded-xl shadow-md p-6 flex flex-col md:flex-row items-center justify-between gap-4">
 
-          <span className='text-maroon-900'> "Spoiler alert"</span> "These desserts are as sweet as you are!" And You know what,  "You deserve all the sweetness today and every day. Enjoy!"
-            <button className='bg-maroon-900 hover:bg-maroon-800"
-               text-white-500 font-semibold px-5 py-2 rounded-lg shadow-md transition duration-300 w-fit mx-auto md:mx-0 gap-2 flex flex-row items-center justify-center'>
-              Checkout   ₹{Number(total || 0).toFixed(2)}
-            </button>
-          </div>
-        </div>
+    <p className="text-center md:text-left text-sm md:text-lg font-medium">
+      <span className="text-maroon-900 font-bold">
+        Spoiler Alert:
+      </span>{" "}
+      These desserts are as sweet as you are. You deserve all the sweetness today and every day ❤️
+    </p>
+
+    <button
+      onClick={handleCheckout}
+      className="bg-maroon-900 hover:bg-maroon-800 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300 whitespace-nowrap"
+    >
+      Checkout ₹{Number(total || 0).toFixed(2)}
+    </button>
+
+  </div>
+</div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ const Address = require("../models/Address");
 // Add a new address
 exports.addAddress = async (req, res) => {
     try{
-         const userId = req.user.id; // from auth middleware
+         const userId = req.user._id; // from auth middleware
     const { label, recipientName, phone, street, city, pincode, state, country, isDefault } = req.body;
 
     // Validate required fields
@@ -66,7 +66,7 @@ exports.addAddress = async (req, res) => {
 //  Get all addresses for a user
 exports.getAddresses = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const addresses = await Address.find({ userId }).sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -91,7 +91,7 @@ exports.getAddresses = async (req, res) => {
 // get Address by ID
 exports.getAddressById = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const { addressId } = req.params;
 
     const address = await Address.findOne({
@@ -124,7 +124,7 @@ exports.getAddressById = async (req, res) => {
 //  Update an address
 exports.updateAddress = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const { addressId } = req.params;
 
     const {
@@ -195,7 +195,7 @@ exports.updateAddress = async (req, res) => {
 //  Delete an address
 exports.deleteAddress = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const { addressId } = req.params;
 
     // Delete address
@@ -240,7 +240,7 @@ exports.deleteAddress = async (req, res) => {
 // set default Address
 exports.setDefaultAddress = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const { addressId } = req.params;
 
     await Address.updateMany(
@@ -277,7 +277,7 @@ exports.setDefaultAddress = async (req, res) => {
 // get default address
 exports.getDefaultAddress = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     const address = await Address.findOne({
       userId,

@@ -63,7 +63,7 @@ const Product = () => {
 
 const handleAddToCart = async () => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
     if (!token) {
       console.log("No token found in localStorage");
       toast.error("Please log in to add products to your cart");
