@@ -33,6 +33,8 @@ import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import Address from "./pages/Address";
 import Payment from "./pages/Payment";
+import OrderSuccess from "./pages/OrderSuccess";
+import ChatBot from "./chatbot/ChatBot";
 
 
 function App() {
@@ -261,7 +263,13 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/address" element={<Address/>} />
           <Route path="/payment" element={<Payment />} />
-      </Routes>
+          <Route path="/order-success" element={<OrderSuccess/>}
+/>      </Routes>
+
+
+   {/* chatbot appears on every page */}
+
+   <ChatBot/>
 
     </div>
   );

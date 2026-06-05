@@ -68,8 +68,7 @@ exports.createOrder = async (req, res) => {
       address,
     });
 
-    cart.items = [];
-    await cart.save();
+   
 
     return res.status(201).json({
       success: true,

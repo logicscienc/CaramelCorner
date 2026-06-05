@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BsCart } from "react-icons/bs";
 import { FcLike } from "react-icons/fc";
+import { FiHeart } from "react-icons/fi";
+import { BiShoppingBag } from "react-icons/bi";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../../services/operations/authAPI";
 import topLeftImage from "../../../assets/Logo/topLeftImage.png";
@@ -13,6 +15,7 @@ import SearchBar from "./SearchBar";
 import { apiConnector } from "../../../services/apiconnector";
 import { cartEndpoints } from "../../../services/apis";
 import { setCartFromBackend } from "../../../slices/cartSlice";
+import { setWishlistFromBackend } from "../../../slices/wishlistSlice";
 import { useEffect } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
@@ -25,7 +28,8 @@ const Navbar = () => {
   const { token, user } = useSelector((state) => state.auth); // Read login state from Redux
   console.log("Navbar token:", token);
   const { totalItems } = useSelector((state) => state.cart);
-
+  const wishlistCount = useSelector((state) => state.wishlist.wishlist.length);
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   useEffect(() => {
@@ -82,7 +86,7 @@ const Navbar = () => {
   }, [dispatch, token]);
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logout(navigate));
     // for mobile
     setMobileMenuOpen(false);
   };
@@ -145,11 +149,12 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/cart"
-                    className="relative hover:text-maroon-900 flex items-center gap-1 text-3xl"
+                    className="relative flex items-center justify-center text-maroon-900 rounded-full p-2 transition-shadow duration-300 hover:shadow-[0_0_20px_#800000B3]"
                   >
-                    <BsCart />
+                    <BiShoppingBag size={40} />
+
                     {totalItems > 0 && (
-                      <span className="absolute -top-2 -right-2 z-50 bg-[#DC2626] text-white-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                      <span className="absolute top-0 right-0 z-50 bg-[#DC2626] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                         {totalItems}
                       </span>
                     )}
@@ -157,9 +162,15 @@ const Navbar = () => {
 
                   <Link
                     to="/wishlist"
-                    className="hover:text-maroon-900 flex items-center gap-1 text-3xl"
+                    className="relative flex items-center justify-center text-maroon-900 rounded-full p-2 transition-shadow duration-300 hover:shadow-[0_0_20px_#800000B3]"
                   >
-                    <FcLike />
+                    <FiHeart size={40} />
+
+                    {wishlistCount > 0 && (
+                      <span className="absolute top-0 right-0 z-50 bg-[#DC2626] text-white-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                        {wishlistCount}
+                      </span>
+                    )}
                   </Link>
                   <div className="relative group">
                     <button className="hover:text-maroon-900  text-3xl">
@@ -187,7 +198,6 @@ const Navbar = () => {
               </div>
             </div>
 
-           
             {/* Mobile Icons */}
             <div className="md:hidden flex flex-col items-center gap-3">
               {/* Burger Icon */}
@@ -210,15 +220,15 @@ const Navbar = () => {
                 className="flex flex-col items-center cursor-pointer"
               >
                 <div className="transition-all duration-300 hover:shadow-[0_0_20px_#800000B3] rounded-full p-2">
-                 <img
-  src={tongueout}
-  alt="Dessert Menu"
-  className="w-10 h-10 object-contain"
-  style={{
-    filter:
-      "brightness(0) saturate(100%) invert(14%) sepia(40%) saturate(2276%) hue-rotate(325deg) brightness(95%) contrast(95%)",
-  }}
-/>
+                  <img
+                    src={tongueout}
+                    alt="Dessert Menu"
+                    className="w-10 h-10 object-contain"
+                    style={{
+                      filter:
+                        "brightness(0) saturate(100%) invert(14%) sepia(40%) saturate(2276%) hue-rotate(325deg) brightness(95%) contrast(95%)",
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -290,19 +300,18 @@ const Navbar = () => {
             </div>
           )}
 
+          {categoryMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 bg-black/50 z-[998]"
+                onClick={() => setCategoryMenuOpen(false)}
+              />
 
-  {categoryMenuOpen && (
-  <>
-    {/* Backdrop */}
-    <div
-      className="fixed inset-0 bg-black/50 z-[998]"
-      onClick={() => setCategoryMenuOpen(false)}
-    />
-
-    {/* Drawer */}
-    <div
-    style={{ backgroundColor: "#fff" }}
-      className="
+              {/* Drawer */}
+              <div
+                style={{ backgroundColor: "#fff" }}
+                className="
         fixed
         top-0
         right-0
@@ -317,13 +326,13 @@ const Navbar = () => {
 
       
       "
-    >
-      <MobileNavItems
-        closeDrawer={() => setCategoryMenuOpen(false)}
-      />
-    </div>
-  </>
-)}
+              >
+                <MobileNavItems
+                  closeDrawer={() => setCategoryMenuOpen(false)}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

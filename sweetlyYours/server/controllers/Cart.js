@@ -104,6 +104,8 @@ exports.getCart = async (req, res) => {
 
     const cart = await Cart.findOne({ userId }).populate("items.productId"); // populate product details
 
+      res.set("Cache-Control", "no-store");
+
     if (!cart) {
       return res.status(200).json({
         success: true,

@@ -81,3 +81,9 @@ export const paymentEndpoints = {
 };
 
 
+// chatbot endpoints
+export const chatbotEndpoints = {
+  CHAT_API: BASE_URL + "/chatbot/chat",
+};
+
+

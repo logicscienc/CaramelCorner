@@ -2,7 +2,8 @@ const { instance } = require("../config/razorpay");
 const Order = require("../models/Order");
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
-const paymentSuccessEmail = require("../mail/templates/paymentSuccessEmail")
+const { paymentSuccessEmail } = require("../mail/templates/paymentSuccessEmail");
+const Cart = require("../models/Cart");
 const { default: mongoose } = require("mongoose");
 const crypto = require("crypto");
 
@@ -197,6 +198,18 @@ order.razorpaySignature = razorpay_signature;
 order.orderStatus = "Placed";
 
 await order.save();
+
+const cart = await Cart.findOne({ userId });
+
+console.log("USER ID:", userId);
+console.log("FOUND CART:", cart);
+
+if (cart) {
+  cart.items = [];
+  cart.totalPrice = 0;
+  await cart.save();
+  console.log("CART CLEARED");
+}
 
     // send email
     const user = order.userId;

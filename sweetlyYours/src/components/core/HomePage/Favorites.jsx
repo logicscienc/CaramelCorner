@@ -37,7 +37,7 @@ const Favorites = () => {
         {products.map((product, index) => (
           <motion.div
             key={product._id}
-            onClick={() => navigate(`/product/${product.name}`)}
+            onClick={() => navigate(`/product/${product._id}`)}
             className="bg-white-500 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl 
                        transition-all duration-300 cursor-pointer group relative"
             variants={cardVariants}

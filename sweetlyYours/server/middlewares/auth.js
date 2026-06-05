@@ -42,6 +42,7 @@ const auth = async (req, res, next) => {
     console.log("User fetched from DB:", user.email, user.role);
 
     req.user = user;
+    console.log("Middleware req.user:", req.user);
     next();
   } catch (err) {
     console.error("Auth middleware error:", err.message);
