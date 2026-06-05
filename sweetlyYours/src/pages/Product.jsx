@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import { BiShoppingBag } from "react-icons/bi";
+import { MdCardGiftcard } from "react-icons/md";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FiHeart } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
