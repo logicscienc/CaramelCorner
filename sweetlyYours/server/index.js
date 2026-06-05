@@ -26,16 +26,26 @@ database.connect();
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
+// const allowedOrigins = [
+//   "http://localhost:3000",
+//   "https://caramel-corner.vercel.app",
+// ];
+
+// const cors = require("cors");
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      process.env.FRONTEND_URL,
-    ],
+    origin: ["http://localhost:3000", "https://caramel-corner.vercel.app"],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+app.options("*", cors({
+  origin: ["http://localhost:3000", "https://caramel-corner.vercel.app"],
+  credentials: true,
+}));
 
 app.use(
 	fileUpload({
