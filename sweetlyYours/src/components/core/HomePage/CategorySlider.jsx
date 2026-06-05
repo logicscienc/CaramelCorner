@@ -8,7 +8,7 @@ export default function CategorySlider() {
   const [slides, setSlides] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const listRef = useRef(null);
+ 
   const runningTimeRef = useRef(null);
   const navigate = useNavigate();
 
@@ -78,7 +78,7 @@ setSlides(allCategories);
   if (!slides.length) {
     return (
       <div className="flex items-center justify-center w-full h-96 text-gray-500">
-        <img src={bunny} />
+        <img src={bunny} alt="loading animation"/>
       </div>
     );
   }

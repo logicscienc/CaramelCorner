@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { IoMdAdd } from "react-icons/io";
+
 import { FaRegUserCircle } from "react-icons/fa";
 import { FiHeart } from "react-icons/fi";
-import { BiShoppingBag } from "react-icons/bi";
-import { MdCardGiftcard } from "react-icons/md";
+import { IoMdAdd } from "react-icons/io";
+
 import { toast } from "react-hot-toast";
 
-import { productEndpoints } from "../services/apis";
+import { productEndpoints, cartEndpoints } from "../services/apis";
 import { apiConnector } from "../services/apiconnector";
-import { addToCart } from "../slices/cartSlice"; 
+
 import delivery from "../assets/Logo/delivery.svg";
 import shop from "../assets/Logo/shop.svg";
 import Footer from "../components/common/Footer";
-import { cartEndpoints } from "../services/apis";
-import { setCartFromBackend } from "../slices/cartSlice"; 
+
+import { setCartFromBackend } from "../slices/cartSlice";
 
 const Product = () => {
   const [product, setProduct] = useState(null);
@@ -28,7 +28,7 @@ const Product = () => {
   const { productId } = useParams();
 
   //  Get user state from Redux
-  const { token } = useSelector((state) => state.auth); // assuming you store token in `auth`
+  // const { token } = useSelector((state) => state.auth); // assuming you store token in `auth`
 
   // Fetch product details
   const fetchProduct = async () => {
@@ -372,4 +372,4 @@ const handleAddToCart = async () => {
   );
 };
 
-export default Product;
+export default Product; 
