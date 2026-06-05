@@ -1,62 +1,69 @@
 require("dotenv").config();
-console.log("Loaded JWT_SECRET:", process.env.JWT_SECRET);
+
 const express = require("express");
 const app = express();
 
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const fileUpload = require("express-fileupload");
+
+const database = require("./config/database");
+const { cloudinaryConnect } = require("./config/cloudinary");
+
+// Routes
 const userRoutes = require("./routes/User");
 const productRoutes = require("./routes/Product");
 const cartRoutes = require("./routes/Cart");
 const orderRoutes = require("./routes/Order");
 const paymentRoutes = require("./routes/Payment");
 const addressRoutes = require("./routes/Address");
-const database = require("./config/database");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const {cloudinaryConnect } = require("./config/cloudinary");
-const fileUpload = require("express-fileupload");
-const dotenv = require("dotenv");
 const chatRoutes = require("./routes/Chat");
 
-dotenv.config();
 const PORT = process.env.PORT || 4000;
 
-
-//database connect
+/* ---------------- DATABASE ---------------- */
 database.connect();
-//middlewares
+
+/* ---------------- MIDDLEWARES ---------------- */
 app.use(express.json());
 app.use(cookieParser());
-// const allowedOrigins = [
-//   "http://localhost:3000",
-//   "https://caramel-corner.vercel.app",
-// ];
 
-// const cors = require("cors");
+/* ---------------- CORS ---------------- */
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://caramel-corner.vercel.app",
+];
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(null, false);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
+/* ---------------- FILE UPLOAD ---------------- */
 app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://caramel-corner.vercel.app"],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp",
   })
 );
 
-app.options("*", cors({
-  origin: ["http://localhost:3000", "https://caramel-corner.vercel.app"],
-  credentials: true,
-}));
-
-app.use(
-	fileUpload({
-		useTempFiles:true,
-		tempFileDir:"/tmp",
-	})
-)
-//cloudinary connection
+/* ---------------- CLOUDINARY ---------------- */
 cloudinaryConnect();
 
-//routes
+/* ---------------- ROUTES ---------------- */
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/cart", cartRoutes);
@@ -64,15 +71,16 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/address", addressRoutes);
 app.use("/api/v1/chatbot", chatRoutes);
-//def route
 
+/* ---------------- HEALTH CHECK ---------------- */
 app.get("/", (req, res) => {
-	return res.json({
-		success:true,
-		message:'Your server is up and running....'
-	});
+  res.json({
+    success: true,
+    message: "Your server is up and running....",
+  });
 });
 
+/* ---------------- START SERVER ---------------- */
 app.listen(PORT, () => {
-	console.log(`App is running at ${PORT}`)
-}) 
+  console.log(`App is running on port ${PORT}`);
+});
