@@ -6,7 +6,7 @@ import footer from "../../assets/Logo/footer.mp4";
 
 const Footer = () => {
   return (
-     <footer className="relative text-white-600 pt-10 pb-6 mt-16 overflow-hidden">
+    <footer className="relative text-white-600 pt-10 pb-6 mt-16 overflow-hidden">
       {/* Background Video */}
       <video
         autoPlay
@@ -19,14 +19,14 @@ const Footer = () => {
         Your browser does not support the video tag.
       </video>
 
-     
       {/* Footer Content */}
       <div className="max-w-4xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 relative z-10">
         {/* column 1 */}
         <div>
           <img src={logo} alt="Sweetly Yours Logo" />
           <p className="mt-3 text-md leading-relaxed">
-            Spreading sweetness across India — Fresh, delicious, and made with love.
+            Spreading sweetness across India — Fresh, delicious, and made with
+            love.
           </p>
         </div>
 
@@ -37,11 +37,14 @@ const Footer = () => {
             {["Cakes", "Donuts", "Cupcakes", "Indian Sweets", "Chocolates"].map(
               (item) => (
                 <li key={item}>
-                  <a href="#" className="hover:text-black-600 transition-colors">
-                    {item}
-                  </a>
+                  <button
+  type="button"
+  className="bg-transparent border-none p-0 cursor-pointer hover:text-black-600 transition-colors"
+>
+  {item}
+</button>
                 </li>
-              )
+              ),
             )}
           </ul>
         </div>
@@ -58,9 +61,12 @@ const Footer = () => {
               "Privacy Policy",
             ].map((item) => (
               <li key={item}>
-                <a href="#" className="hover:text-black-600 transition-colors">
+                <button
+                  type="button"
+                  className="hover:text-black-600 transition-colors"
+                >
                   {item}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
@@ -70,42 +76,36 @@ const Footer = () => {
         <div>
           <h3 className="font-semibold text-lg mb-6">Stay Connected</h3>
           <div className="flex space-x-4 mb-4">
-            <a
-              href="#"
+            <button
+              type="button"
               aria-label="Instagram"
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-black-600 hover:text-white-500 text-2xl transition-transform duration-300 hover:-translate-y-2"
             >
               <FaInstagram />
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
+              type="button"
               aria-label="Facebook"
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-black-600 hover:text-white-500 text-2xl transition-transform duration-300 hover:-translate-y-2"
             >
               <FaFacebook />
-            </a>
-            <a
-              href="#"
+            </button>
+
+            <button
+              type="button"
               aria-label="Twitter"
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-black-600 hover:text-white-500 text-2xl transition-transform duration-300 hover:-translate-y-2"
             >
               <FaTwitter />
-            </a>
-            <a
-              href="#"
+            </button>
+
+            <button
+              type="button"
               aria-label="YouTube"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-black-600 hover:text-white-500  text-2xl transition-transform duration-300 hover:-translate-y-2"
+              className="text-black-600 hover:text-white-500 text-2xl transition-transform duration-300 hover:-translate-y-2"
             >
               <FaYoutube />
-            </a>
+            </button>
           </div>
 
           {/* Newsletter */}
@@ -125,7 +125,8 @@ const Footer = () => {
 
       {/* Bottom Line */}
       <div className="relative text-center text-sm text-white-500 mt-10 border-t border-black-500 pt-4">
-        © {new Date().getFullYear()} Sweetly Yours. Made with ❤ and lots of sugar.
+        © {new Date().getFullYear()} Sweetly Yours. Made with ❤ and lots of
+        sugar.
       </div>
     </footer>
   );
