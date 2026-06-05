@@ -11,12 +11,19 @@ const database = require("./config/database");
 const { cloudinaryConnect } = require("./config/cloudinary");
 
 // Routes
+
 const userRoutes = require("./routes/User");
+
 const productRoutes = require("./routes/Product");
+
 const cartRoutes = require("./routes/Cart");
+
 const orderRoutes = require("./routes/Order");
+
 const paymentRoutes = require("./routes/Payment");
+
 const addressRoutes = require("./routes/Address");
+
 const chatRoutes = require("./routes/Chat");
 
 const PORT = process.env.PORT || 4000;
@@ -29,39 +36,31 @@ app.use(express.json());
 app.use(cookieParser());
 
 /* ---------------- CORS ---------------- */
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://caramel-corner.vercel.app",
-];
+// const allowedOrigins = [
+//   "http://localhost:3000",
+//   "https://caramel-corner.vercel.app",
+// ];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
+app.use(
+  cors({
+    origin: "https://caramel-corner.vercel.app",
+    credentials:true,
+  })
+)
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
 
-    return callback(null, false);
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
 /* ---------------- FILE UPLOAD ---------------- */
 app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: "/tmp",
-  })
+  }),
 );
 
 /* ---------------- CLOUDINARY ---------------- */
 cloudinaryConnect();
+
 
 /* ---------------- ROUTES ---------------- */
 app.use("/api/v1/auth", userRoutes);
