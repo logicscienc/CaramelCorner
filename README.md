@@ -4,6 +4,8 @@ SweetlyYours is a full-stack web application for ordering sweets online with sec
 
 ---
 
+## Live: https://caramel-corner.vercel.app
+
 ## 🚀 Highlights
 
 - 🛍️ **End-to-End Ordering & Management** — Secure payment gateway, authentication, user profiles, and real-time order tracking. Includes an admin dashboard for product management and live order monitoring.  
