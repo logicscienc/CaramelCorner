@@ -9,36 +9,29 @@ require("dotenv").config();
 // Send OTP
 exports.sendOTP = async (req, res) => {
   try {
-    // fetch email from request body
-    const { email, purpose } = req.body; 
+    console.log("========== SEND OTP START ==========");
 
-    // check if user already exist
+    const { email, purpose } = req.body;
+
+    console.log("EMAIL:", email);
+    console.log("PURPOSE:", purpose);
+
     const checkUserPresent = await User.findOne({ email });
 
-    // Handle based on purpose
-    if (purpose === "registration" && checkUserPresent) {
-      return res.status(400).json({
-        success: false,
-        message: "User already registered",
-      });
-    }
+    console.log("USER CHECK COMPLETED");
 
-    if (purpose === "login" && !checkUserPresent) {
-      return res.status(400).json({
-        success: false,
-        message: "User not registered",
-      });
-    }
+    // existing code ...
 
-    // generate otp
+    console.log("GENERATING OTP");
+
     var otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
       specialChars: false,
     });
-    console.log("OTP generated: ", otp);
 
-    // check unique otp or not. this is important because lets imagin at the same time multiple users are trying to register at that time we need to make sure that every single person gets different otp. that's why we had used this while loop.
+    console.log("OTP GENERATED:", otp);
+
     let result = await OTP.findOne({ otp });
 
     while (result) {
@@ -47,26 +40,41 @@ exports.sendOTP = async (req, res) => {
         lowerCaseAlphabets: false,
         specialChars: false,
       });
+
       result = await OTP.findOne({ otp });
     }
 
-    await OTP.create({ email, otp, purpose });
+    console.log("OTP UNIQUE");
 
-    // send OTP via email
+    await OTP.create({
+      email,
+      otp,
+      purpose,
+    });
+
+    console.log("OTP SAVED TO DB");
+
+    console.log("CALLING MAILSENDER");
+
     await mailSender(
       email,
-      "CaramelCorner -  OTP  Verification",
-      `<p>Your OTP for ${purpose} is: <b>${otp}</b></p>
-       <p>This OTP is valid for 5 minutes.</p>`
+      "CaramelCorner - OTP Verification",
+      `<p>Your OTP is <b>${otp}</b></p>`
     );
 
-    // return response successful
-    res.status(200).json({
+    console.log("MAIL SENT SUCCESSFULLY");
+
+    return res.status(200).json({
       success: true,
       message: "OTP Send Successfully",
     });
+
   } catch (error) {
+
+    console.log("SEND OTP ERROR:");
     console.log(error);
+    console.log(error.message);
+
     return res.status(500).json({
       success: false,
       message: error.message,
