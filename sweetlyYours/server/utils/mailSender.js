@@ -13,8 +13,8 @@ console.log("MAIL_USER:", process.env.MAIL_USER);
     console.log("CREATING TRANSPORTER");
     let transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
-      port: 587,
-      secure: false,
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
