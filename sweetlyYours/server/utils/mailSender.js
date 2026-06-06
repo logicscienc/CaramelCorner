@@ -21,6 +21,9 @@ console.log("MAIL_USER:", process.env.MAIL_USER);
       },
     });
 
+    await transporter.verify();
+console.log("SMTP VERIFIED");
+
     console.log("TRANSPORTER CREATED");
 
     let info = await transporter.sendMail({
