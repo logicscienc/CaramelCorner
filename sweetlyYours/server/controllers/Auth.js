@@ -87,10 +87,10 @@ exports.sendOTP = async (req, res) => {
 exports.signUp = async (req, res) => {
   try {
     // data fetch from request body
-    const { name, email, phone, role, password, otp } = req.body;
+    const { name, email, phone, role, password } = req.body;
 
     // Validate if all the info are filled or not.
-    if (!name || !email || !phone || !role || !password || !otp) {
+    if (!name || !email || !phone || !role || !password) {
       return res.status(403).json({
         success: false,
         message: "All fields are required",
@@ -106,38 +106,7 @@ exports.signUp = async (req, res) => {
       });
     }
 
-    // find most recent OTP stored for the user
-    const recentOtp = await OTP.findOne({
-      email,
-      purpose: "registration",
-    }).sort({ createdAt: -1 });
-
-    console.log(recentOtp);
-    // validate OTP
-    if (!recentOtp) {
-      // OTP not found
-      return res.status(400).json({
-        success: false,
-        message: "Otp not Found or expired",
-      });
-    }
-
-    // OTP expiry check (5 minutes)
-    const otpAge = (Date.now() - recentOtp.createdAt) / 1000;
-    if (otpAge > 300) {
-      return res.status(400).json({
-        success: false,
-        message: "OTP has expired. Please request a new one.",
-      });
-    }
-    if (otp !== recentOtp.otp) {
-      // Invalis Otp
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP",
-      });
-    }
-
+  
     // Hash password
     //  const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -150,8 +119,7 @@ exports.signUp = async (req, res) => {
       
     });
 
-    // Delete all OTP records for this email after successful registration
-    await OTP.deleteMany({ email });
+   
 
     // return response
     return res.status(200).json({
