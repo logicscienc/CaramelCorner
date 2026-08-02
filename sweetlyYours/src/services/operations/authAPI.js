@@ -41,19 +41,18 @@ export function sendOTP(email, navigate, purpose = "registration") {
 
 
 // Sign Up
-export function signUp(name, email, phone, password, otp, navigate) {
+export function signUp(name, email, phone, password, navigate) {
   return async (dispatch) => {
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("POST", SIGNUP_API, {
-        name,
-        email,
-        phone,
-        role: "Customer",
-        password,
-        otp,
-      });
+     const response = await apiConnector("POST", SIGNUP_API, {
+  name,
+  email,
+  phone,
+  role: "Customer",
+  password,
+});
 
       console.log("SIGNUP API RESPONSE:", response);
 
