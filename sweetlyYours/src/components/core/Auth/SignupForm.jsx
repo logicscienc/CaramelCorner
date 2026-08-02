@@ -3,8 +3,9 @@ import { toast } from "react-hot-toast";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { sendOTP } from "../../../services/operations/authAPI";
-import { setSignupData } from "../../../slices/authSlice";
+// import { sendOTP } from "../../../services/operations/authAPI";
+// import { setSignupData } from "../../../slices/authSlice";
+import { signUp } from "../../../services/operations/authAPI";
 import { ACCOUNT_TYPE } from "../../../utils/constants";
 import { motion } from "framer-motion";
 import macrons from "../../../assets/Images/macrons.jpeg";
@@ -44,20 +45,21 @@ const handleSignupSubmit = async (e) => {
     return;
   }
 
-  const signupData = { ...formData, role };
-  dispatch(setSignupData(signupData));
+  // const signupData = { ...formData, role };
+  // dispatch(setSignupData(signupData));
 
-  try {
-  const result = await dispatch(sendOTP(email, null, "registration"));
-  console.log("OTP sent result:", result); // should log { success: true, message: "OTP Send Successfully" }
-
-  if (result.success) {
-    console.log("Navigating now...");
-    navigate("/verify-email"); //  redirect happens here
-  }
+ try {
+  await dispatch(
+    signUp(
+      name,
+      email,
+      phone,
+      password,
+      navigate
+    )
+  );
 } catch (error) {
   console.error(error);
-  toast.error("Failed to send OTP. Try again.");
 }
 
 
