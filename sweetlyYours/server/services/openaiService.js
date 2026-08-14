@@ -104,7 +104,7 @@ Output:
 
     console.log("AI RAW RESPONSE:", content);
 
-    return JSON.parse(content);
+    return content;
   } catch (error) {
     console.error("OPENAI ERROR:", error);
 
