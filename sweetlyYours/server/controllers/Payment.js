@@ -214,16 +214,20 @@ if (cart) {
     // send email
     const user = order.userId;
 
-    await mailSender(
-      user.email,
-      "🎉 Payment Successful - Sweetly Yours",
-      paymentSuccessEmail(
-        user.name,
-        order.totalAmount,
-        order._id,
-        razorpay_payment_id
-      )
-    );
+try {
+  await mailSender(
+    user.email,
+    "🎉 Payment Successful - Sweetly Yours",
+    paymentSuccessEmail(
+      user.name,
+      order.totalAmount,
+      order._id,
+      razorpay_payment_id
+    )
+  );
+} catch (emailError) {
+  console.error("Payment email failed:", emailError);
+}
 
     return res.status(200).json({
       success: true,
