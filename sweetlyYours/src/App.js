@@ -265,7 +265,7 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/address" element={<Address/>} />
           <Route path="/payment" element={<Payment />} />
-                    <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/orders" element={<Orders />} />
       </Routes>
 
