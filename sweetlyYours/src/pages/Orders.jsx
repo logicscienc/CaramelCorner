@@ -23,7 +23,7 @@ export default function Orders() {
           "https://caramelcorner.onrender.com/api/v1/order/orders",
           { headers: { Authorization: `Bearer ${getToken()}` } }
         );
-        setOrders(res.data.orders || []);
+        setOrders((res.data.orders || []).filter((o) => o.paymentStatus === "Paid"));
       } catch (err) {
         console.error("Fetch orders error:", err.response?.data || err.message);
         setError("Could not load your orders. Please try again.");
