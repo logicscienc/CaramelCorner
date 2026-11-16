@@ -1,34 +1,28 @@
 const nodemailer = require("nodemailer");
 
 const mailSender = async (email, title, body) => {
-  try {
-    console.log("MAIL_USER:", process.env.MAIL_USER);
-console.log("MAIL_PASS_LENGTH:", process.env.MAIL_PASS?.length);
-   let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      "api-key": process.env.BREVO_API_KEY,
     },
-});
-    await transporter.verify();
-console.log("SMTP VERIFIED");
-
-    let info = await transporter.sendMail({
-      from: `"CaramelCorner" <${process.env.MAIL_USER}>`,
-      to: email,
+    body: JSON.stringify({
+      sender: { name: "Sweetly Yours", email: process.env.EMAIL_FROM },
+      to: [{ email }],
       subject: title,
-      html: body,
-    });
+      htmlContent: body,
+    }),
+  });
 
-    console.log("Mail sent:", info.messageId);
+  const data = await response.json();
 
-    return info;
-
-  } catch(error) {
-    console.log("Mail error:", error.message);
-    throw error;
+  if (!response.ok) {
+    throw new Error(data.message || "Brevo email failed");
   }
+
+  return data;
 };
 
 module.exports = mailSender;
