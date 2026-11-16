@@ -35,6 +35,7 @@ import Address from "./pages/Address";
 import Payment from "./pages/Payment";
 import OrderSuccess from "./pages/OrderSuccess";
 import ChatBot from "./chatbot/ChatBot";
+import Orders from "./pages/Orders";
 
 
 
@@ -265,6 +266,7 @@ function App() {
           <Route path="/address" element={<Address/>} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/order-success" element={<OrderSuccess/>}
+          <Route path="/orders" element={<Orders />} />
 />      </Routes>
 
 
